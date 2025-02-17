@@ -43,18 +43,11 @@ class BottomBarItem extends StatelessWidget {
                       ),
                 )
               : Container(),
-          isForProfile == true
-              ? SvgPicture.asset(
-                  iconPath,
-                  height: isTablet ? sizeh * .03 : sizeh * .025,
-                )
-              : SvgPicture.asset(
-                  iconPath,
-                  height: isTablet ? sizeh * .03 : sizeh * .025,
-                  color: selectedIndex == index
-                      ? yallewTextColor
-                      : Color(0xFFA6A6A6),
-                ),
+          SvgPicture.asset(
+            iconPath,
+            height: isTablet ? sizeh * .03 : sizeh * .025,
+            color: selectedIndex == index ? yallewTextColor : Color(0xFFA6A6A6),
+          ),
           Text(
             title,
             style: AppTextStyles.regular.copyWith(

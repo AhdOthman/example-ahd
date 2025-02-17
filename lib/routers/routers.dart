@@ -111,4 +111,10 @@ class Routers {
     Navigator.of(context).pushNamedAndRemoveUntil(
         arguments: args, BottomBarScreen.routeName, (route) => false);
   }
+
+  void navigateToMyAccountScreenFromSignin(BuildContext context,
+      {Map<String, dynamic>? args}) {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        arguments: args, MyAccountScreen.routeName, (route) => false);
+  }
 }

@@ -5,11 +5,17 @@ import 'package:subrate/services/api/app/get_country_list_api.dart';
 import 'package:subrate/theme/failure.dart';
 
 class AppProvider with ChangeNotifier {
+  bool isFromHome = false;
   var dateFormat = DateFormat('dd MMM,yyyy', 'en');
   int selectedIndex = 0;
   void onItemTapped(int index) {
     selectedIndex = index;
     notifyListeners();
+  }
+
+  bool isTablet(BuildContext context) {
+    final sizew = MediaQuery.of(context).size.width;
+    return sizew > 500;
   }
 
   List<GetCountryList> countryList = [];

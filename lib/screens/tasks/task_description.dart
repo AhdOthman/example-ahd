@@ -220,7 +220,7 @@ class _TaskDescriptionScreenState extends State<TaskDescriptionScreen> {
                                   ?.steps?[index].title ??
                               '',
                           stepTitle: taskProvider.taskDetailsModel?.task
-                                  ?.steps?[index].title ??
+                                  ?.steps?[index].description ??
                               '',
                         );
                       },
@@ -362,25 +362,25 @@ class _TaskDescriptionScreenState extends State<TaskDescriptionScreen> {
               SizedBox(
                 height: sizeh * .002,
               ),
-              // Row(
-              //   children: [
-              //     Text(stepText,
-              //         style: AppTextStyles.regular
-              //             .copyWith(fontSize: 11.5.sp, color: primaryColor)),
-              //     SizedBox(
-              //       width: sizew * .045,
-              //     ),
-              //     InkWell(
-              //       onTap: () {
-              //         Clipboard.setData(new ClipboardData(text: stepText));
-              //       },
-              //       child: SvgPicture.asset(
-              //         copyIcon,
-              //         height: sizeh * .02,
-              //       ),
-              //     ),
-              //   ],
-              // ),
+              Row(
+                children: [
+                  Text(stepText,
+                      style: AppTextStyles.regular
+                          .copyWith(fontSize: 11.5.sp, color: primaryColor)),
+                  SizedBox(
+                    width: sizew * .045,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Clipboard.setData(new ClipboardData(text: stepText));
+                    },
+                    child: SvgPicture.asset(
+                      copyIcon,
+                      height: sizeh * .022,
+                    ),
+                  ),
+                ],
+              ),
             ],
           )
         ],

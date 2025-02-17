@@ -2,12 +2,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:subrate/models/home/tenant_model.dart';
 import 'package:subrate/provider/appprovider.dart';
 import 'package:subrate/provider/authprovider.dart';
 import 'package:subrate/provider/homeprovider.dart';
 import 'package:subrate/provider/notificationprovider.dart';
+import 'package:subrate/provider/profileprovider.dart';
 import 'package:subrate/routers/routers.dart';
 import 'package:subrate/theme/app_colors.dart';
 import 'package:subrate/theme/assets_managet.dart';
@@ -56,12 +58,24 @@ class _HomeScreenState extends State<HomeScreen> {
     return await homeProvider.getTasks();
   }
 
+  Future _getProfile() async {
+    final profileProvider =
+        Provider.of<Profileprovider>(context, listen: false);
+    return await profileProvider.getProfileData(context);
+  }
+
   @override
   void initState() {
     final homeProvider = Provider.of<HomeProvider>(context, listen: false);
+
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    _fetcheAllData =
-        Future.wait([_getNotifications(), _getTenants(), _getTasks()]);
+
+    _fetcheAllData = Future.wait([
+      _getNotifications(),
+      _getTenants(),
+      _getTasks(),
+      _getProfile(),
+    ]);
     Future.delayed(Duration(seconds: 2), () {
       if (homeProvider.tenantList.isNotEmpty) {
         if (authProvider.tenantID != null) {
@@ -87,7 +101,22 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
     });
+
     super.initState();
+  }
+
+  void logout() async {
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final Routers routers = Routers();
+    authProvider.token = null;
+    authProvider.userName = null;
+    appProvider.selectedIndex = 0;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('userTenant');
+    await prefs.remove('userData');
+    authProvider.tenantID = null;
+    routers.navigateToSigninScreen(context);
   }
 
   late Future _fetcheAllData;
@@ -349,7 +378,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (snapshot.hasData) {
                             if (snapshot.data is Failure) {
                               if (snapshot.data.toString().contains('401')) {
-                                authProvider.logout(context);
+                                logout();
                                 UIHelper.showNotification(
                                   'Session Expired',
                                 );

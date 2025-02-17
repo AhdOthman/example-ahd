@@ -1,3 +1,4 @@
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -16,8 +17,8 @@ import 'package:subrate/translations/locale_keys.g.dart';
 import 'package:subrate/widgets/app/button.dart';
 import 'package:subrate/widgets/app/loadingdialog.dart';
 import 'package:subrate/widgets/app/textfield.dart';
-import 'package:subrate/widgets/auth/social_button.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:subrate/widgets/auth/social_button.dart';
 
 class SignupScreen extends StatefulWidget {
   static const routeName = 'signup-screen';
@@ -57,6 +58,7 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
+  String countryPrefix = '+971';
   bool acseptTerms = false;
   @override
   Widget build(BuildContext context) {
@@ -150,7 +152,6 @@ class _SignupScreenState extends State<SignupScreen> {
                         title: LocaleKeys.email.tr(),
                         hintSize: 1,
                         controller: emailController),
-                    space,
                     DropdownSearch<String>(
                       validator: (value) {
                         if (value?.isEmpty ?? true) {
@@ -160,9 +161,29 @@ class _SignupScreenState extends State<SignupScreen> {
                         return null;
                       },
                       selectedItem: _country,
-                      popupProps: const PopupProps.menu(
+                      popupProps: PopupProps.menu(
                         showSearchBox: true,
                         showSelectedItems: true,
+                        itemBuilder: (context, item, isSelected) {
+                          final country = appProvider.countryList.firstWhere(
+                            (element) => element.nameAr == item,
+                          );
+
+                          return ListTile(
+                            leading: country.flag != null
+                                ? Image.network(
+                                    country.flag!,
+                                    fit: BoxFit.cover,
+                                  )
+                                : const Icon(Icons.flag),
+                            title: Text(
+                              country.nameAr ?? '',
+                              style: TextStyle(
+                                color: isSelected ? Colors.blue : Colors.black,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                       items: appProvider.countryList.map((item) {
                         return item.nameAr ?? '';
@@ -216,7 +237,27 @@ class _SignupScreenState extends State<SignupScreen> {
                       },
                     ),
                     space,
+                    space,
+                    space,
                     CustomField(
+                        prefixIcon: CountryCodePicker(
+                          flagWidth: sizew * .06,
+                          padding: EdgeInsets.symmetric(vertical: sizew * .015),
+                          onChanged: (country) {
+                            print(country);
+                            setState(() {
+                              countryPrefix = country.dialCode ?? '+971';
+                              print(countryPrefix);
+                            });
+                          },
+                          initialSelection: 'AE',
+                          showFlag: true,
+                          hideMainText: false,
+                          showCountryOnly: false,
+                          showOnlyCountryWhenClosed: false,
+                          showDropDownButton: true,
+                          showFlagDialog: true,
+                        ),
                         isPhone: true,
                         didgits: 10,
                         hintText: LocaleKeys.phone_number.tr(),
@@ -229,6 +270,9 @@ class _SignupScreenState extends State<SignupScreen> {
                         _selectDate(context);
                       },
                       child: CustomField(
+                          validator: (value) {
+                            return null;
+                          },
                           enabled: false,
                           hintText: LocaleKeys.dob.tr(),
                           title: LocaleKeys.dob.tr(),
@@ -265,18 +309,22 @@ class _SignupScreenState extends State<SignupScreen> {
                                 authProvider
                                     .signUp(
                                         signUpRequestModel: SignupModelRequest(
+                                            countryCode: countryPrefix,
+                                            nationalNumber:
+                                                phoneController.text,
                                             firstName: firstNameController.text,
                                             lastName: lastNameController.text,
                                             email: emailController.text,
                                             password: passwordController.text,
-                                            phone: phoneController.text,
+                                            phone:
+                                                '${countryPrefix}${phoneController.text}',
                                             countryId: _myCountry,
                                             birthDate: dobController.text))
                                     .then((value) {
                                   Navigator.pop(context);
                                   if (value) {
                                     routers.navigateToBottomBarScreen(context);
-                                  }
+                                  } else {}
                                 });
                               }
                             }
@@ -317,16 +365,21 @@ class _SignupScreenState extends State<SignupScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SocialButton(assetName: googleIcon, title: 'Google'),
-                        SizedBox(
-                          width: sizew * .02,
-                        ),
-                        SocialButton(
-                            assetName: facebookIcon, title: 'Facebook'),
-                        SizedBox(
-                          width: sizew * .02,
-                        ),
-                        SocialButton(assetName: appleIcon, title: 'Apple'),
+                        InkWell(
+                            onTap: () {
+                              authProvider.handleSignInWithGoogle(context);
+                            },
+                            child: SocialButton(
+                                assetName: googleIcon, title: 'Google')),
+                        //     SizedBox(width: sizew * .02),
+                        //     SocialButton(assetName: facebookIcon, title: 'Facebook'),
+                        SizedBox(width: sizew * .02),
+                        InkWell(
+                            onTap: () {
+                              authProvider.handleSignInWithApple(context);
+                            },
+                            child: SocialButton(
+                                assetName: appleIcon, title: 'Apple')),
                       ],
                     ),
                     SizedBox(

@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "com.projecxio.subrate",
+      "package_name": "com.projecxio.subrate",
+      "sha256_cert_fingerprints": [
+        "57:61:57:C6:BC:1B:FC:B9:1F:20:88:BA:4B:A9:A4:5D:ED:BB:83:F0:C8:BD:5D:E9:55:5F:C6:8A:D4:C3:34:3F"
+      ]
+    }
+  }
+]

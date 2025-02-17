@@ -2,7 +2,10 @@ const String baseIconPath = 'assets/icons';
 const String baseImagePath = 'assets/images';
 const String baseJsonPath = 'assets/json';
 
-const String pageSlider1 = '$baseIconPath/page 2.svg';
+const String pageSlider1 = '$baseIconPath/Group-01.svg';
+const String pageSlider2 = '$baseIconPath/Group-02.svg';
+const String pageSlider3 = '$baseIconPath/Group-03.svg';
+
 const String subrateLogo = '$baseIconPath/logo.svg';
 const String facebookIcon = '$baseIconPath/facebook.svg';
 const String googleIcon = '$baseIconPath/google.svg';

@@ -2,10 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:subrate/provider/appprovider.dart';
 import 'package:subrate/provider/authprovider.dart';
 import 'package:subrate/provider/walletprovider.dart';
+import 'package:subrate/routers/routers.dart';
 import 'package:subrate/theme/app_colors.dart';
 import 'package:subrate/theme/assets_managet.dart';
 import 'package:subrate/theme/failure.dart';
@@ -65,6 +67,20 @@ class _WalletScreenState extends State<WalletScreen> {
     return await walletProvider.getPayoutHistory();
   }
 
+  void logout() async {
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final Routers routers = Routers();
+    authProvider.token = null;
+    authProvider.userName = null;
+    appProvider.selectedIndex = 0;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('userTenant');
+    await prefs.remove('userData');
+    authProvider.tenantID = null;
+    routers.navigateToSigninScreen(context);
+  }
+
   @override
   void initState() {
     _fetcheAllData = Future.wait([
@@ -101,7 +117,7 @@ class _WalletScreenState extends State<WalletScreen> {
           if (snapshot.hasData) {
             if (snapshot.data is Failure) {
               if (snapshot.data.toString().contains('401')) {
-                authProvider.logout(context);
+                logout();
                 UIHelper.showNotification(
                   'Session Expired',
                 );
@@ -169,19 +185,25 @@ class _WalletScreenState extends State<WalletScreen> {
                                                 .please_add_payout
                                                 .tr());
                                           }
-                                        : () {
-                                            walletProvider
-                                                .traineePaymentMethodList
-                                                .map((e) => e.isClicked = false)
-                                                .toList();
-                                            paymentValue = null;
+                                        : walletProvider.totalPoints == 0
+                                            ? () {
+                                                UIHelper.showNotification(
+                                                    'You have no points to pay');
+                                              }
+                                            : () {
+                                                walletProvider
+                                                    .traineePaymentMethodList
+                                                    .map((e) =>
+                                                        e.isClicked = false)
+                                                    .toList();
+                                                paymentValue = null;
 
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  buildDialog(),
-                                            );
-                                          },
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      buildDialog(),
+                                                );
+                                              },
                                     buttonColor: Colors.transparent,
                                     borderColor: primaryColor,
                                     textColor: primaryColor,

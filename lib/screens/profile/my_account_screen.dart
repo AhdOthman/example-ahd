@@ -7,6 +7,7 @@ import 'package:sizer/sizer.dart';
 import 'package:subrate/models/profile/edit_profile_model.dart';
 import 'package:subrate/provider/appprovider.dart';
 import 'package:subrate/provider/profileprovider.dart';
+import 'package:subrate/routers/routers.dart';
 import 'package:subrate/theme/app_colors.dart';
 import 'package:subrate/theme/assets_managet.dart';
 import 'package:subrate/theme/text_style.dart';
@@ -80,6 +81,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   Widget build(BuildContext context) {
     final sizeh = MediaQuery.of(context).size.height;
     final sizew = MediaQuery.of(context).size.width;
+    final Routers routers = Routers();
     final space = SizedBox(
       height: sizeh * .02,
     );
@@ -101,20 +103,24 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                 ),
                 Row(
                   children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: primaryColor,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: sizew * .01, vertical: sizeh * .005),
-                        child: Icon(Icons.arrow_back, color: yallewTextColor),
-                      ),
-                    ),
+                    appProvider.isFromHome
+                        ? SizedBox()
+                        : InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: primaryColor,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: sizew * .01,
+                                  vertical: sizeh * .005),
+                              child: Icon(Icons.arrow_back,
+                                  color: yallewTextColor),
+                            ),
+                          ),
                     SizedBox(
                       width: sizew * .03,
                     ),
@@ -235,7 +241,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                       space,
                       CustomField(
                           isPhone: true,
-                          didgits: 10,
+                          didgits: 16,
                           labelColor: primaryColor,
                           disabledBorder: primaryColor,
                           hintText: LocaleKeys.phone_number.tr(),
@@ -296,10 +302,17 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                         ))
                             .then((value) {
                           if (value == true) {
-                            profileProvider.getProfileData().then((value) {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            });
+                            appProvider.isFromHome
+                                ? routers.navigateToBottomBarScreen(context)
+                                : profileProvider
+                                    .getProfileData(context)
+                                    .then((value) {
+                                    appProvider.isFromHome = false;
+
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    appProvider.isFromHome = false;
+                                  });
                           } else {
                             Navigator.pop(context);
                           }

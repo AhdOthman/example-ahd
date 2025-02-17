@@ -95,12 +95,14 @@ class Task {
 class Steps {
   String? id;
   String? title;
+  String? description;
 
   Steps({this.id, this.title});
 
   Steps.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
+    description = json['description'];
   }
 
   Map<String, dynamic> toJson() {

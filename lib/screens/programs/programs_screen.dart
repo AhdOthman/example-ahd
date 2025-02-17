@@ -2,7 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:subrate/provider/appprovider.dart';
 import 'package:subrate/provider/authprovider.dart';
 import 'package:subrate/provider/programprovider.dart';
 import 'package:subrate/routers/routers.dart';
@@ -49,6 +51,19 @@ class _ProgramsScreenState extends State<ProgramsScreen> {
   }
 
   late Future _fetcheAllData;
+  void logout() async {
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final Routers routers = Routers();
+    authProvider.token = null;
+    authProvider.userName = null;
+    appProvider.selectedIndex = 0;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('userTenant');
+    await prefs.remove('userData');
+    authProvider.tenantID = null;
+    routers.navigateToSigninScreen(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +71,7 @@ class _ProgramsScreenState extends State<ProgramsScreen> {
     final sizew = MediaQuery.of(context).size.width;
     final Routers routers = Routers();
     final authProvider = Provider.of<AuthProvider>(context);
+    final appProvider = Provider.of<AppProvider>(context);
     return Scaffold(
       backgroundColor: innerBackgroundColor,
       body: Container(
@@ -99,7 +115,7 @@ class _ProgramsScreenState extends State<ProgramsScreen> {
                         if (snapshot.hasData) {
                           if (snapshot.data is Failure) {
                             if (snapshot.data.toString().contains('401')) {
-                              authProvider.logout(context);
+                              logout();
                               UIHelper.showNotification(
                                 'Session Expired',
                               );
@@ -132,7 +148,10 @@ class _ProgramsScreenState extends State<ProgramsScreen> {
                                             crossAxisSpacing: 20,
                                             mainAxisSpacing: 20,
                                             childAspectRatio: 28 / 14,
-                                            mainAxisExtent: sizeh * 0.16),
+                                            mainAxisExtent:
+                                                appProvider.isTablet(context)
+                                                    ? sizeh * .2
+                                                    : sizeh * 0.16),
                                     itemBuilder: (context, index) {
                                       Color boxColor =
                                           boxColors[index % boxColors.length];
@@ -194,6 +213,8 @@ class _ProgramsScreenState extends State<ProgramsScreen> {
       required Color boxColor,
       required String titleProgram,
       required String tasksLength}) {
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
+
     return Container(
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
@@ -216,7 +237,8 @@ class _ProgramsScreenState extends State<ProgramsScreen> {
               child: SvgPicture.asset(
                 programCardIcon,
                 color: iconColor,
-                height: sizeh * .025,
+                height:
+                    appProvider.isTablet(context) ? sizeh * .035 : sizeh * .025,
               )),
           SizedBox(
             height: sizeh * .01,
@@ -232,6 +254,8 @@ class _ProgramsScreenState extends State<ProgramsScreen> {
             children: [
               SvgPicture.asset(
                 taskIcon,
+                height:
+                    appProvider.isTablet(context) ? sizeh * .035 : sizeh * .025,
               ),
               SizedBox(
                 width: sizew * .02,

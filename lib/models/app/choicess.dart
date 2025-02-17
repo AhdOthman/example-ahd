@@ -29,14 +29,14 @@ List<Choicess> onBoadrdingChoices = [
       name: "Let’s Start Work",
       value: 2,
       clicked: false,
-      choiceImage: pageSlider1,
+      choiceImage: pageSlider2,
       subTitle:
           "Our goal is to ensure that you have everything you need of learning, and training, and ready to make an impact."),
   Choicess(
       name: "Great! Earn your money",
       value: 3,
       clicked: false,
-      choiceImage: pageSlider1,
+      choiceImage: pageSlider3,
       subTitle:
           "Our goal is to ensure that you have everything you need of learning, and training, and ready to make an impact."),
 ];

@@ -22,7 +22,9 @@ import 'package:subrate/translations/codegen_loader.g.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -83,6 +85,7 @@ class MyApp extends StatelessWidget {
             ],
             child: Consumer<AuthProvider>(builder: (context, auth, _) {
               return MaterialApp(
+                debugShowCheckedModeBanner: false,
                 locale: context.locale,
                 supportedLocales: context.supportedLocales,
                 localizationsDelegates: context.localizationDelegates,
@@ -111,7 +114,27 @@ class MyApp extends StatelessWidget {
                   useMaterial3: true,
                 ),
                 routes: routers.routes,
-                home: _buildHomeScreen(context, auth),
+                home: auth.isAuth
+                    ? const SplashScreen()
+                    : FutureBuilder(
+                        future: auth.autologin(),
+                        builder: (context, authSnap) {
+                          print('auth token ${auth.token} ${auth.isAuth}');
+                          if (authSnap.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (authSnap.hasError) {
+                            return const Center(
+                                child: Text('An error occurred'));
+                          } else {
+                            return showHome == true
+                                ? const SplashScreen()
+                                : const OnBoardingScreen();
+                          }
+                        },
+                      ),
               );
             }),
           ),
@@ -120,26 +143,27 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  Widget _buildHomeScreen(BuildContext context, AuthProvider auth) {
-    return auth.isAuth
-        ? const SplashScreen()
-        : FutureBuilder(
-            future: auth.autologin(),
-            builder: (context, authSnap) {
-              if (authSnap.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (authSnap.hasError) {
-                return const Center(child: Text('An error occurred'));
-              } else {
-                return showHome == true
-                    ? const SplashScreen()
-                    : const OnBoardingScreen();
-              }
-            },
-          );
-  }
+  // Widget _buildHomeScreen(BuildContext context, AuthProvider auth) {
+  //   return auth.isAuth
+  //       ? const SplashScreen()
+  //       : FutureBuilder(
+  //           future: auth.autologin(),
+  //           builder: (context, authSnap) {
+  //             print('auth token ${auth.token} ${auth.isAuth}');
+  //             if (authSnap.connectionState == ConnectionState.waiting) {
+  //               return const Center(
+  //                 child: CircularProgressIndicator(),
+  //               );
+  //             } else if (authSnap.hasError) {
+  //               return const Center(child: Text('An error occurred'));
+  //             } else {
+  //               return showHome == true
+  //                   ? const SplashScreen()
+  //                   : const OnBoardingScreen();
+  //             }
+  //           },
+  //         );
+  // }
 }
 
 class MyHomePage extends StatefulWidget {

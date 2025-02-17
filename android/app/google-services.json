@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "296210165303",
+    "project_id": "subrate-91f04",
+    "storage_bucket": "subrate-91f04.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:296210165303:android:ec5eb318678d239f58d9b2",
+        "android_client_info": {
+          "package_name": "com.projecxio.subrate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "296210165303-eubkvbev483ucf9bk79rb3skl18guug9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhSja5MIeaMUIKln69fWDnznKCbeJMskQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "296210165303-eubkvbev483ucf9bk79rb3skl18guug9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "296210165303-l0nr0is03rjf130in1k5hmahiievhprs.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.projecxio.subrate"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

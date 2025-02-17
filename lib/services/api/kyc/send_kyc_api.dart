@@ -1,5 +1,5 @@
 import 'package:subrate/api_url.dart';
-import 'package:subrate/models/profile/send_kyc_request_model.dart';
+import 'package:subrate/models/kyc/send_kyc_request_model.dart';
 
 import '../../../helpers/base_dio_api.dart';
 import '../../../helpers/requests_enum.dart';

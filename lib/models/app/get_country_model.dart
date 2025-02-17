@@ -2,13 +2,14 @@ class GetCountryList {
   String? id;
   String? nameEn;
   String? nameAr;
-
+  String? flag;
   GetCountryList({this.id, this.nameEn, this.nameAr});
 
   GetCountryList.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     nameEn = json['nameEn'];
     nameAr = json['nameAr'];
+    flag = json['flag'];
   }
 
   Map<String, dynamic> toJson() {

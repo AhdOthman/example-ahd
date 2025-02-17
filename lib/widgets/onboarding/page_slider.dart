@@ -32,7 +32,6 @@ class PageSlider extends StatelessWidget {
           ),
           Container(
             height: sizeh * .4,
-            color: primaryColor,
             child: path.contains('json')
                 ? SizedBox(
                     height: sizeh * .3,

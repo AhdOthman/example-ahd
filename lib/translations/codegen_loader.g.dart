@@ -110,7 +110,9 @@ class CodegenLoader extends AssetLoader{
   "please_add_payout": "Please add payout method!",
   "payout_request_sent": "Payout request sent!",
   "completed": "Completed",
-  "rejected": "Invitation Rejected Successfully"
+  "rejected": "Invitation Rejected Successfully",
+  "are_you_sure": "Are you sure?",
+  "delete_message": "Are you sure that you want to delete your account?"
 };
 static const Map<String,dynamic> ar = {
   "hello": "مرحباً",
@@ -208,7 +210,9 @@ static const Map<String,dynamic> ar = {
   "please_add_payout": "أضف طرق دفع رجاءً!",
   "payout_request_sent": "تم إرسال طلب السحب!",
   "completed": "مكتملة",
-  "rejected": "تم رفض الدعوة"
+  "rejected": "تم رفض الدعوة",
+  "are_you_sure": "هل أنت متأكد؟",
+  "delete_message": "هل أنت متأكد أنك تريد حذف حسابك؟"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en": en, "ar": ar};
 }

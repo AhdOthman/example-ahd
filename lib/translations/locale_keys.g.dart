@@ -97,5 +97,7 @@ abstract class  LocaleKeys {
   static const payout_request_sent = 'payout_request_sent';
   static const completed = 'completed';
   static const rejected = 'rejected';
+  static const are_you_sure = 'are_you_sure';
+  static const delete_message = 'delete_message';
 
 }

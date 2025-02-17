@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:subrate/api_url.dart';
 import 'package:subrate/provider/appprovider.dart';
@@ -34,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future _getProfile() async {
     final profileProvider =
         Provider.of<Profileprovider>(context, listen: false);
-    return await profileProvider.getProfileData();
+    return await profileProvider.getProfileData(context);
   }
 
   @override
@@ -85,6 +86,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
     print(image);
   }
 
+  void logoutFun() async {
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final Routers routers = Routers();
+    authProvider.token = null;
+    authProvider.userName = null;
+    appProvider.selectedIndex = 0;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('userTenant');
+    await prefs.remove('userData');
+    authProvider.tenantID = null;
+    routers.navigateToSigninScreen(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final sizeh = MediaQuery.of(context).size.height;
@@ -92,8 +107,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final profileProvider = Provider.of<Profileprovider>(
       context,
     );
+
     final Routers routers = Routers();
     final authProvider = Provider.of<AuthProvider>(context, listen: true);
+    final appProvider = Provider.of<AppProvider>(context, listen: true);
+
     return Scaffold(
       backgroundColor: innerBackgroundColor,
       body: FutureBuilder(
@@ -110,7 +128,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (snapshot.hasData) {
             if (snapshot.data is Failure) {
               if (snapshot.data.toString().contains('401')) {
-                authProvider.logout(context);
+                logoutFun();
                 UIHelper.showNotification(
                   'Session Expired',
                 );
@@ -140,13 +158,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         alignment: Alignment.center,
                         children: [
                           SizedBox(
-                            height: 90,
-                            width: 90,
+                            height: appProvider.isTablet(context) ? 130 : 90,
+                            width: appProvider.isTablet(context) ? 130 : 90,
                             child: CustomPaint(
                               painter: FourDashedCirclePainter(
                                 color: yallewTextColor,
-                                strokeWidth: 2,
-                                dashLength: 40,
+                                strokeWidth:
+                                    appProvider.isTablet(context) ? 3 : 2,
+                                dashLength:
+                                    appProvider.isTablet(context) ? 40 : 40,
                               ),
                             ),
                           ),
@@ -154,12 +174,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ? CircleAvatar(
                                   backgroundImage:
                                       FileImage(File(_image!.path)),
-                                  radius: 40,
+                                  radius:
+                                      appProvider.isTablet(context) ? 60 : 40,
                                   backgroundColor: Colors.white,
                                 )
                               : CircleAvatar(
                                   backgroundColor: Colors.white,
-                                  radius: 40, // Small photo radius
+                                  radius: appProvider.isTablet(context)
+                                      ? 60
+                                      : 40, // Small photo radius
                                   backgroundImage: NetworkImage(profileProvider
                                               .profileModel?.picture !=
                                           null

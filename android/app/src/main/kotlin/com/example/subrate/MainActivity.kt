@@ -1,4 +1,4 @@
-package com.example.subrate
+package com.projecxio.subrate
 
 import io.flutter.embedding.android.FlutterActivity
 

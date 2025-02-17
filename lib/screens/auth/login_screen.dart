@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -142,11 +144,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SocialButton(assetName: googleIcon, title: 'Google'),
+                      Platform.isIOS
+                          ? InkWell(
+                              onTap: () {
+                                authProvider
+                                    .handleSignInWithApple(context)
+                                    .then((value) {
+                                  // if (value == true) {
+                                  //   routers.navigateToBottomBarScreen(context);
+                                  // } else {
+                                  //   Navigator.of(context).pop();
+                                  // }
+                                });
+                              },
+                              child: SocialButton(
+                                  assetName: appleIcon, title: 'Apple'))
+                          : InkWell(
+                              onTap: () {
+                                authProvider.handleSignInWithGoogle(context);
+                              },
+                              child: SocialButton(
+                                  assetName: googleIcon, title: 'Google')),
+                      //     SizedBox(width: sizew * .02),
+                      //     SocialButton(assetName: facebookIcon, title: 'Facebook'),
                       SizedBox(width: sizew * .02),
-                      SocialButton(assetName: facebookIcon, title: 'Facebook'),
-                      SizedBox(width: sizew * .02),
-                      SocialButton(assetName: appleIcon, title: 'Apple'),
                     ],
                   ),
                   SizedBox(height: sizeh * .025),

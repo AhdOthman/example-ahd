@@ -52,7 +52,12 @@ class StorageProvider with ChangeNotifier {
         // Save the result link (example: save in a variable or storage)
         // You can use SharedPreferences, SQLite, or other storage options.
       } else {
-        print("Failed to upload file. Status code: ${response.statusCode}");
+        if (response.statusCode == 413) {
+          UIHelper.showNotification('File size is too large');
+        } else {
+          print("Failed to upload file. Status code: ${response.statusCode}");
+        }
+
         return false;
       }
     } catch (e) {

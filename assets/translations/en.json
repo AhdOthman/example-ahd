@@ -94,5 +94,7 @@
   "please_add_payout": "Please add payout method!",
   "payout_request_sent": "Payout request sent!",
   "completed": "Completed",
-  "rejected": "Invitation Rejected Successfully"
+  "rejected": "Invitation Rejected Successfully",
+  "are_you_sure": "Are you sure?",
+  "delete_message": "Are you sure that you want to delete your account?"
 }

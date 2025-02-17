@@ -226,17 +226,18 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                   itemCount: getDynamicFormList.length,
                                   itemBuilder: (context, index) {
                                     final field = getDynamicFormList[index];
-                                    field.value != null
-                                        ? formData[field.name ?? ''] =
-                                            field.value
-                                        : null;
+
+                                    // Initialize formData with default values if not already set
+                                    if (formData[field.name ?? ''] == null) {
+                                      formData[field.name ?? ''] = field.value;
+                                    }
+
                                     return DynamicFormField(
                                       key: ValueKey(field.name),
                                       apiData: field,
                                       onChanged: (newValue) {
                                         setState(() {
                                           formData[field.name ?? ''] = newValue;
-                                          print("Form Data: $formData");
                                         });
                                       },
                                     );
@@ -261,6 +262,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                                               fieldName: entry.key,
                                               fieldValue: entry.value);
                                         }).toList();
+
                                         walletProvider
                                             .addPaymentMethod(
                                                 paymentDetailsRequest:

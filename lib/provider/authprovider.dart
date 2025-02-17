@@ -1,18 +1,26 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:subrate/api_url.dart';
 import 'package:subrate/models/auth/signin_model_request.dart';
 import 'package:subrate/models/auth/signup_model_request.dart';
+import 'package:subrate/models/auth/social_login_response_model.dart';
 import 'package:subrate/models/auth/update_password_model.dart';
 import 'package:subrate/provider/appprovider.dart';
 import 'package:subrate/routers/routers.dart';
+import 'package:subrate/services/api/auth/delete_my_account_api.dart';
 import 'package:subrate/services/api/auth/signin_api.dart';
+import 'package:subrate/services/api/auth/signin_with_apple_api.dart';
 import 'package:subrate/services/api/auth/signup_api.dart';
 import 'package:subrate/services/api/auth/update_password_api.dart';
 import 'package:subrate/theme/failure.dart';
 import 'package:subrate/theme/ui_helper.dart';
+import 'package:subrate/widgets/app/loadingdialog.dart';
 
 import '../models/auth/signin_response_model.dart';
 
@@ -102,6 +110,19 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> autologin() async {
     final prefs = await SharedPreferences.getInstance();
+
+    if (!prefs.containsKey('userData')) {
+      debugPrint("no data");
+      return false;
+    }
+
+    debugPrint(" data ex");
+
+    final extractData = json.decode(prefs.getString('userData').toString())
+        as Map<String, dynamic>;
+
+    token = extractData['token'];
+
     if (!prefs.containsKey('userTenant')) {
       debugPrint("no tenant data");
       return false;
@@ -115,20 +136,13 @@ class AuthProvider with ChangeNotifier {
       tenantID = extractTenantData['id'];
       print('$tenantID tenant');
     }
-    if (!prefs.containsKey('userData')) {
-      debugPrint("no data");
-      return false;
-    }
-
-    debugPrint(" data ex");
-
-    final extractData = json.decode(prefs.getString('userData').toString())
-        as Map<String, dynamic>;
-
-    token = extractData['token'];
     notifyListeners();
 
     return true;
+  }
+
+  void signOutGoogle() async {
+    await _googleSignIn.signOut();
   }
 
   Future<void> logout(
@@ -144,6 +158,7 @@ class AuthProvider with ChangeNotifier {
     await prefs.remove('userData');
     appProvider.selectedIndex = 0;
     tenantID = null;
+    signOutGoogle();
     notifyListeners();
     routers.navigateToSigninScreen(context);
   }
@@ -161,4 +176,158 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
   }
+
+  Future deleteAccount() async {
+    try {
+      var response = await DeleteMyAccountApi().fetch();
+      print(response);
+      return true;
+    } on Failure {
+      return false;
+    }
+  }
+
+  SocialLoginResponseModel? socialLoginResponse;
+
+  Future<bool> handleSignInWithApple(BuildContext context) async {
+    final Routers routers = Routers();
+    final prefs = await SharedPreferences.getInstance();
+
+    try {
+      // Trigger the sign-in flow
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        webAuthenticationOptions: WebAuthenticationOptions(
+          clientId: 'com.projecxio.subrate',
+          redirectUri: Uri.parse('$baseUrl/auth/apple/callback'),
+        ),
+      );
+
+      loadingDialog(context);
+
+      var response = await SigninWithSocialApi(
+              type: SocialType.apple,
+              socialToken: appleCredential.authorizationCode)
+          .fetch();
+      print(response);
+      print(appleCredential.authorizationCode);
+      Clipboard.setData(ClipboardData(text: appleCredential.authorizationCode));
+
+      socialLoginResponse =
+          SocialLoginResponseModel.fromJson(response['result']);
+
+      String? token = socialLoginResponse?.token;
+
+      final userData = json.encode({
+        'token': token,
+      });
+
+      if (token != null) {
+        routers.navigateToBottomBarScreen(context);
+        prefs.setString('userData', userData);
+      } else {
+        Navigator.of(context).pop();
+      }
+
+      return true;
+    } catch (error) {
+      print("Error: $error");
+
+      return false;
+    }
+  }
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+      //  Specify the options to prompt for account selection
+      scopes: ['email', 'profile', 'openid'],
+      serverClientId:
+          '519738265080-g51dc8uilkrthbi8j4n05k17r9ne221b.apps.googleusercontent.com');
+
+  Future<bool> handleSignInWithGoogle(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final Routers routers = Routers();
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      loadingDialog(context);
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+
+        var response = await SigninWithSocialApi(
+                type: SocialType.google, socialToken: googleAuth.idToken ?? '')
+            .fetch();
+        print(response);
+        socialLoginResponse =
+            SocialLoginResponseModel.fromJson(response['result']);
+        print(response);
+        token = socialLoginResponse?.token;
+        userName = '${socialLoginResponse?.user?.username}';
+        print(token);
+        final userData = json.encode({
+          'token': token,
+        });
+        prefs.setString('userData', userData);
+        token != null ? routers.navigateToBottomBarScreen(context) : null;
+        print('userData ${prefs.getString('userData')}');
+        return true;
+      } else {
+        print("Google sign-in was cancelled.");
+        return false;
+      }
+    } catch (error) {
+      print("Error during Google Sign-In: $error");
+      Navigator.of(context).pop();
+      // Optionally show an alert dialog here
+      return false;
+    }
+  }
+
+//   Future<bool> handleSignInWithGoogle(BuildContext context) async {
+//     final Routers routers = Routers();
+//     final prefs = await SharedPreferences.getInstance();
+
+//     try {
+//       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+//       if (googleUser != null) {
+//         loadingDialog(context);
+
+//         final GoogleSignInAuthentication googleAuth =
+//             await googleUser.authentication;
+//         print('googleAuth ${googleAuth.accessToken}');
+//         print(googleAuth.idToken);
+//         final AuthCredential credential = GoogleAuthProvider.credential(
+//           accessToken: googleAuth.accessToken,
+//           idToken: googleAuth.idToken,
+//         );
+//         final UserCredential userCrefdential =
+//             await _auth.signInWithCredential(credential);
+//         String? userIdToken = await userCrefdential.user?.getIdToken();
+//         var response =
+//             await SocialLoginApi(loginType: 'google', uID: userIdToken ?? '')
+//                 .fetch();
+//         socialLoginResponse = SocialLoginResponse.fromJson(response['data']);
+//         print(response);
+//         token = socialLoginResponse?.apiToken;
+//         userName = '${socialLoginResponse?.fullName}';
+//         print(token);
+//         final userData = json.encode({
+//           'token': token,
+//         });
+//         prefs.setString('userData', userData);
+//         token != null ? routers.navigateToBottomBarScreen(context) : null;
+//       }
+//       return true;
+//     } catch (error) {
+//       print("Error: $error");
+//       Navigator.of(context).pop();
+
+//       return false;
+//     }
+//   }
+// }
 }

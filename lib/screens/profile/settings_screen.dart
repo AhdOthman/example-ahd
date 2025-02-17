@@ -4,11 +4,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:subrate/provider/appprovider.dart';
+import 'package:subrate/provider/authprovider.dart';
 import 'package:subrate/routers/routers.dart';
 import 'package:subrate/theme/app_colors.dart';
 import 'package:subrate/theme/assets_managet.dart';
 import 'package:subrate/theme/text_style.dart';
 import 'package:subrate/translations/locale_keys.g.dart';
+import 'package:subrate/widgets/app/loadingdialog.dart';
 
 class SettingsScreen extends StatefulWidget {
   static const routeName = 'settings-screen';
@@ -31,6 +33,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
     print('${isArabic}isArabic');
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
+  }
+
+  Future<bool?> showDeleteDialog() async {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+                title: Text(LocaleKeys.are_you_sure.tr()),
+                content: Text(LocaleKeys.delete_message.tr()),
+                actions: [
+                  TextButton(
+                    child: Text(LocaleKeys.no.tr()),
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                  ),
+                  TextButton(
+                    child: Text(LocaleKeys.yes.tr()),
+                    onPressed: () {
+                      loadingDialog(context);
+                      Provider.of<AuthProvider>(context, listen: false)
+                          .deleteAccount()
+                          .then((value) {
+                        Navigator.of(context).pop();
+                        if (value == true) {
+                          Provider.of<AuthProvider>(context, listen: false)
+                              .logout(context);
+                        }
+                      });
+                    },
+                  )
+                ]));
+    return null;
   }
 
   @override
@@ -111,11 +145,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               iconPath: supportSettings,
               title: LocaleKeys.support.tr(),
             ),
-            buildProfileCard(
-              sizeh,
-              sizew,
-              iconPath: deleteSettings,
-              title: LocaleKeys.delete_account.tr(),
+            InkWell(
+              onTap: () {
+                showDeleteDialog();
+              },
+              child: buildProfileCard(
+                sizeh,
+                sizew,
+                iconPath: deleteSettings,
+                title: LocaleKeys.delete_account.tr(),
+              ),
             )
           ],
         ),

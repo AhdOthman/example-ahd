@@ -6,6 +6,8 @@ class SignupModelRequest {
   String? birthDate;
   String? phone;
   String? countryId;
+  String? countryCode;
+  String? nationalNumber;
 
   SignupModelRequest(
       {this.email,
@@ -14,7 +16,9 @@ class SignupModelRequest {
       this.lastName,
       this.birthDate,
       this.phone,
-      this.countryId});
+      this.countryId,
+      this.countryCode,
+      this.nationalNumber});
 
   SignupModelRequest.fromJson(Map<String, dynamic> json) {
     email = json['email'];
@@ -24,6 +28,8 @@ class SignupModelRequest {
     birthDate = json['birthDate'];
     phone = json['phone'];
     countryId = json['countryId'];
+    countryCode = json['countryCode'];
+    nationalNumber = json['national_number'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +41,8 @@ class SignupModelRequest {
     data['birthDate'] = this.birthDate;
     data['phone'] = this.phone;
     data['countryId'] = this.countryId;
+    data['countryCode'] = this.countryCode;
+    data['nationalNumber'] = this.nationalNumber;
     return data;
   }
 }

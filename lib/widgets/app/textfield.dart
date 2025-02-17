@@ -22,6 +22,7 @@ class CustomField extends StatelessWidget {
   final Widget? prefixIcon;
   final Color? labelColor;
   final Widget? suffixIcon;
+  final double? width;
   final Color? disabledBorder;
   final bool? enabled;
   final TextEditingController? controller;
@@ -33,6 +34,7 @@ class CustomField extends StatelessWidget {
       this.disabledBorder,
       this.labelStyle,
       this.widget,
+      this.width,
       this.labelColor,
       this.style,
       this.prefixIcon,
@@ -53,6 +55,7 @@ class CustomField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sizeh = MediaQuery.of(context).size.height;
+    final sizew = MediaQuery.of(context).size.width;
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,6 +71,7 @@ class CustomField extends StatelessWidget {
           // ),
           SizedBox(
             height: sizeh * 0.075,
+            width: width ?? sizew,
             child: TextFormField(
               enabled: enabled ?? true,
               controller: controller,
@@ -92,7 +96,7 @@ class CustomField extends StatelessWidget {
               inputFormatters: isPhone == true
                   ? <TextInputFormatter>[
                       LengthLimitingTextInputFormatter(didgits ?? 10),
-                      FilteringTextInputFormatter.digitsOnly
+                      FilteringTextInputFormatter.digitsOnly,
                     ]
                   : [],
               decoration: InputDecoration(

@@ -28,3 +28,7 @@ const String getTraineePaymentMethodLink =
 const String createPayoutRequestLink = '$baseUrl/trainee/wallet/payout/request';
 const String getPayoutHistoryLink = '$baseUrl/trainee/wallet/payout/history';
 const String downloadPhoto = '$baseUrl/storage/download/';
+const String deleteAccountLink = '$baseUrl/auth/delete/account';
+const String getKycRequestLink = '$baseUrl/admin/kyc/request/get/details';
+const String signinWithAppleLink = '$baseUrl/auth/apple/callback';
+const String signinWithGoggleLink = '$baseUrl/auth/google/callback';

@@ -22,6 +22,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     appProvider.getCountries();
     Future.delayed(Duration(seconds: 2), () {
+      print('auth token ${authProvider.token} ${authProvider.isAuth}');
+
       authProvider.isAuth
           ? routers.navigateToBottomBarScreen(context)
           : routers.navigateToSigninScreen(context);
