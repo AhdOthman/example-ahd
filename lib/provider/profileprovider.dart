@@ -4,8 +4,9 @@ import 'package:subrate/models/kyc/get_kyc_model.dart';
 import 'package:subrate/models/profile/edit_profile_model.dart';
 import 'package:subrate/models/profile/profile_model.dart';
 import 'package:subrate/models/kyc/send_kyc_request_model.dart';
-import 'package:subrate/provider/appprovider.dart';
+import 'package:subrate/provider/authprovider.dart';
 import 'package:subrate/routers/routers.dart';
+
 import 'package:subrate/services/api/kyc/get_kyc_api.dart';
 import 'package:subrate/services/api/profile/edit_profile_api.dart';
 import 'package:subrate/services/api/profile/get_profile_api.dart';
@@ -17,14 +18,16 @@ class Profileprovider with ChangeNotifier {
   ProfileModel? profileModel;
   Future getProfileData(BuildContext context) async {
     final Routers routers = Routers();
-    final appProvider = Provider.of<AppProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     try {
       final response = await GetProfileApi().fetch();
       print(response);
-      profileModel = ProfileModel.fromJson(response['result']);
-      if (profileModel?.phone == null || profileModel?.firstName == null) {
-        appProvider.isFromHome = true;
-        routers.navigateToMyAccountScreenFromSignin(context);
+      profileModel = ProfileModel.fromJson(response['result']['data']);
+
+      if (profileModel?.isVerified == false) {
+        authProvider.resendVerifyOtp(profileModel?.email ?? '');
+        routers.navigateToVerifyAccountScreen(context,
+            args: {'email': profileModel?.email});
       }
 
       notifyListeners();
@@ -34,7 +37,7 @@ class Profileprovider with ChangeNotifier {
     }
   }
 
-  Future editProfile({required EditProfileModel editProfileModel}) async {
+  Future<bool> editProfile({required EditProfileModel editProfileModel}) async {
     try {
       var response =
           await EditProfileApi(editProfileModel: editProfileModel).fetch();

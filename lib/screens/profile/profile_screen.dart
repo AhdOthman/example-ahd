@@ -32,6 +32,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late Future _fetchProfileData;
+
   Future _getProfile() async {
     final profileProvider =
         Provider.of<Profileprovider>(context, listen: false);
@@ -47,7 +49,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
   }
 
-  late Future _fetchProfileData;
   final ImagePicker _picker = ImagePicker();
   XFile? _image;
   XFile? imagePath;

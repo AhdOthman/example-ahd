@@ -7,7 +7,8 @@ class GetProfileApi extends BaseDioApi {
   GetProfileApi() : super(getProfileLink);
 
   Future fetch() async {
-    final response = await sendRequest(requests.get, isAuthenticated: true);
+    final response = await sendRequest(requests.get,
+        isAuthenticated: true, sendTenantId: false);
     return response;
   }
 }

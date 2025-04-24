@@ -7,6 +7,7 @@ import 'package:subrate/provider/appprovider.dart';
 import 'package:subrate/provider/homeprovider.dart';
 import 'package:subrate/provider/notificationprovider.dart';
 import 'package:subrate/theme/ui_helper.dart';
+import 'package:subrate/widgets/app/bottombar_item.dart';
 import 'package:subrate/widgets/app/empty_widget.dart';
 import 'package:subrate/theme/app_colors.dart';
 import 'package:subrate/theme/assets_managet.dart';
@@ -25,6 +26,14 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
   String? tenantName;
+  void onItemTapped(int index) {
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
+
+    // final Routers routers = Routers();
+    // routers.navigateToBottomBarScreen(context);
+    appProvider.selectedIndex = index;
+  }
+
   @override
   Widget build(BuildContext context) {
     final homeProvider = Provider.of<HomeProvider>(context);
@@ -33,6 +42,57 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     final notificationProvider = Provider.of<NotificationProvider>(context);
     final appProvider = Provider.of<AppProvider>(context);
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        selectedFontSize: 0,
+        unselectedFontSize: 0,
+        iconSize: 0,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: primaryColor,
+        items: [
+          BottomNavigationBarItem(
+            icon: BottomBarItem(
+              iconPath: home,
+              selectedIndex: appProvider.selectedIndex,
+              index: 0,
+              title:
+                  // authProvider.languageKey == 'ar' ? 'الرئيسية' : 'Home',
+
+                  LocaleKeys.home.tr(),
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: BottomBarItem(
+              iconPath: progrmsIcon,
+              selectedIndex: appProvider.selectedIndex,
+              index: 1,
+              title: LocaleKeys.programs.tr(),
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: BottomBarItem(
+              iconPath: wallet,
+              selectedIndex: appProvider.selectedIndex,
+              index: 2,
+              title: LocaleKeys.wallet.tr(),
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: BottomBarItem(
+              isForProfile: true,
+              iconPath: account,
+              selectedIndex: appProvider.selectedIndex,
+              index: 3,
+              title: LocaleKeys.account.tr(),
+            ),
+            label: '',
+          ),
+        ],
+        currentIndex: appProvider.selectedIndex,
+        onTap: onItemTapped,
+      ),
       backgroundColor: Colors.white,
       body: Container(
         padding: EdgeInsets.symmetric(
@@ -276,10 +336,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 SizedBox(height: sizeh * .035),
                 Center(
                   child: Text(
-                      '${LocaleKeys.now_on.tr()}$workspaceName ${LocaleKeys.workspace.tr()}',
+                      '${LocaleKeys.now_on.tr()}$workspaceName ${LocaleKeys.workspace.tr()} ${LocaleKeys.lets_start.tr()}',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.regular
-                          .copyWith(fontSize: 13.sp, color: Colors.black)),
+                          .copyWith(fontSize: 11.5.sp, color: Colors.black)),
                 ),
               ],
             ),

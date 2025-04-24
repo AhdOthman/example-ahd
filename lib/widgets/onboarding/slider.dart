@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:subrate/models/app/choicess.dart';
+import 'package:subrate/provider/appprovider.dart';
 import 'package:subrate/routers/routers.dart';
 import 'package:subrate/theme/app_colors.dart';
 import 'package:subrate/theme/text_style.dart';
@@ -27,6 +29,16 @@ class _SliderWidgetState extends State<SliderWidget> {
     _controller.dispose();
     // TODO: implement dispose
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
+
+    appProvider.getCountries();
+
+    // TODO: implement initState
+    super.initState();
   }
 
   int? indeX;
@@ -130,10 +142,17 @@ class _SliderWidgetState extends State<SliderWidget> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  LocaleKeys.skip.tr(),
-                  style: AppTextStyles.semiBold
-                      .copyWith(fontSize: 13.sp, color: yallewTextColor),
+                InkWell(
+                  onTap: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.setBool('showHome', true);
+                    routers.navigateToSigninScreen(context);
+                  },
+                  child: Text(
+                    LocaleKeys.skip.tr(),
+                    style: AppTextStyles.semiBold
+                        .copyWith(fontSize: 13.sp, color: yallewTextColor),
+                  ),
                 ),
                 ButtonWidget(
                   radius: 10,

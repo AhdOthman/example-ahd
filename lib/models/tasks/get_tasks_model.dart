@@ -62,6 +62,7 @@ class Task {
   String? description;
   int? point;
   String? link;
+  String? deadlineDate;
   List<Steps>? steps;
 
   Task({this.title, this.description, this.point, this.link, this.steps});
@@ -77,6 +78,7 @@ class Task {
         steps!.add(new Steps.fromJson(v));
       });
     }
+    deadlineDate = json['deadline'];
   }
 
   Map<String, dynamic> toJson() {

@@ -99,5 +99,20 @@ abstract class  LocaleKeys {
   static const rejected = 'rejected';
   static const are_you_sure = 'are_you_sure';
   static const delete_message = 'delete_message';
+  static const lets_start = 'lets_start';
+  static const forget_password = 'forget_password';
+  static const send_otp = 'send_otp';
+  static const verify_identity = 'verify_identity';
+  static const we_sent = 'we_sent';
+  static const enter_it_below = 'enter_it_below';
+  static const set_new_password = 'set_new_password';
+  static const password_reset_sucss = 'password_reset_sucss';
+  static const login_now = 'login_now';
+  static const reset_su = 'reset_su';
+  static const hours = 'hours';
+  static const minutes = 'minutes';
+  static const didnt_recieve = 'didnt_recieve';
+  static const resend_otp = 'resend_otp';
+  static const code_inncorrect = 'code_inncorrect';
 
 }

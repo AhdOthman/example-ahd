@@ -32,7 +32,9 @@ void main() async {
 
   // Set the status bar color
   SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(statusBarColor: Colors.white),
+    const SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.light,
+    ),
   );
 
   final prefs = await SharedPreferences.getInstance();

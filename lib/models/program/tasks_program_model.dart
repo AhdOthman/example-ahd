@@ -37,6 +37,7 @@ class TasksByPrograms {
   String? createdAt;
   String? description;
   List<Submissions>? submissions;
+  String? deadline;
   TaskPrograms? taskPrograms;
 
   TasksByPrograms(
@@ -53,6 +54,7 @@ class TasksByPrograms {
     point = json['point'];
     createdAt = json['createdAt'];
     description = json['description'];
+    deadline = json['deadline'];
     if (json['submissions'] != null) {
       submissions = <Submissions>[];
       json['submissions'].forEach((v) {

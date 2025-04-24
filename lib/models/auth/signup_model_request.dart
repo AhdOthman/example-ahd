@@ -38,11 +38,17 @@ class SignupModelRequest {
     data['password'] = this.password;
     data['firstName'] = this.firstName;
     data['lastName'] = this.lastName;
-    data['birthDate'] = this.birthDate;
-    data['phone'] = this.phone;
+    if (this.birthDate == '') {
+    } else {
+      data['birthDate'] = this.birthDate;
+    }
+    if (this.phone == '') {
+    } else {
+      data['phone'] = this.phone;
+    }
     data['countryId'] = this.countryId;
     data['countryCode'] = this.countryCode;
-    data['nationalNumber'] = this.nationalNumber;
+    // data['nationalNumber'] = this.nationalNumber;
     return data;
   }
 }

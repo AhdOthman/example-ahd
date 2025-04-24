@@ -43,7 +43,12 @@ class PageSlider extends StatelessWidget {
                         height: sizeh * .25,
                         fit: BoxFit.contain,
                       )
-                    : SvgPicture.asset(path, width: sizew, height: sizeh * .22),
+                    : Center(
+                        child: SvgPicture.asset(
+                        path,
+                        width: sizew,
+                        height: sizeh * 3,
+                      )),
           ),
           SizedBox(
             height: sizeh * .04,

@@ -96,5 +96,20 @@
   "completed": "Completed",
   "rejected": "Invitation Rejected Successfully",
   "are_you_sure": "Are you sure?",
-  "delete_message": "Are you sure that you want to delete your account?"
+  "delete_message": "Are you sure that you want to delete your account?",
+  "lets_start": "Let's Start",
+  "forget_password": "Forget Password",
+  "send_otp": "Send OTP",
+  "verify_identity": "Verify Your Identity",
+  "we_sent": "We've sent a 6-digit OTP to your email",
+  "enter_it_below": "Enter it below to continue.",
+  "set_new_password": "Reset your password!",
+  "password_reset_sucss": "Your password has been",
+  "login_now": "Login Now",
+  "reset_su": "reset successfully!",
+  "hours": "Hours",
+  "minutes": "Minutes",
+  "didnt_recieve": "Didn't receive the OTP? ",
+  "resend_otp": "Resend OTP",
+  "code_inncorrect": "The code is incorrect. Please try again."
 }

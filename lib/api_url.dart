@@ -32,3 +32,8 @@ const String deleteAccountLink = '$baseUrl/auth/delete/account';
 const String getKycRequestLink = '$baseUrl/admin/kyc/request/get/details';
 const String signinWithAppleLink = '$baseUrl/auth/apple/callback';
 const String signinWithGoggleLink = '$baseUrl/auth/google/callback';
+const String requestCodeForPassReset = '$baseUrl/forgetPassword/sendCode';
+const String resetPasswordLink = '$baseUrl/forgetPassword/resetPassword';
+const String verifyAccountLink = '$baseUrl/verification/verifyAccount';
+const String resendOtpLink =
+    '$baseUrl/verification/sendRegisterVerificationCode';

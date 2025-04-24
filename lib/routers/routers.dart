@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:subrate/screens/auth/forget_password_screen.dart';
+import 'package:subrate/screens/auth/reset_password_screen.dart';
 import 'package:subrate/screens/auth/signup_screen.dart';
+import 'package:subrate/screens/auth/submit_code_screen.dart';
+import 'package:subrate/screens/auth/verify_account_screen.dart';
 import 'package:subrate/screens/bottombar_screen.dart';
 import 'package:subrate/screens/notifications/notifications_screen.dart';
 import 'package:subrate/screens/onboarding/onboarding_screen.dart';
@@ -27,11 +31,22 @@ class Routers {
     PaymentMethodsScreen.routeName: (context) => const PaymentMethodsScreen(),
     NotificationsScreen.routeName: (context) => const NotificationsScreen(),
     BottomBarScreen.routeName: (context) => const BottomBarScreen(),
+    ForgetPasswordScreen.routeName: (context) => const ForgetPasswordScreen(),
+    SubmitCodeScreen.routeName: (context) => const SubmitCodeScreen(),
+    ResetPasswordScreen.routeName: (context) => const ResetPasswordScreen(),
+    VerifyAccountScreen.routeName: (context) => const VerifyAccountScreen(),
   };
+
   void navigateToSigninScreen(BuildContext context,
       {Map<String, dynamic>? args}) {
     Navigator.of(context).pushNamedAndRemoveUntil(
         arguments: args, LoginScreen.routeName, (route) => false);
+  }
+
+  void navigateToVerifyAccountScreen(BuildContext context,
+      {Map<String, dynamic>? args}) {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        arguments: args, VerifyAccountScreen.routeName, (route) => false);
   }
 
   void navigateToSignupScreen(BuildContext context,
@@ -39,6 +54,30 @@ class Routers {
     Navigator.of(context).pushNamed(
       arguments: args,
       SignupScreen.routeName,
+    );
+  }
+
+  void navigateToForgetPasswordScreen(BuildContext context,
+      {Map<String, dynamic>? args}) {
+    Navigator.of(context).pushNamed(
+      arguments: args,
+      ForgetPasswordScreen.routeName,
+    );
+  }
+
+  void navigateToSubmitCodeScreen(BuildContext context,
+      {Map<String, dynamic>? args}) {
+    Navigator.of(context).pushNamed(
+      arguments: args,
+      SubmitCodeScreen.routeName,
+    );
+  }
+
+  void navigateToResetPasswordScreen(BuildContext context,
+      {Map<String, dynamic>? args}) {
+    Navigator.of(context).pushNamed(
+      arguments: args,
+      ResetPasswordScreen.routeName,
     );
   }
 

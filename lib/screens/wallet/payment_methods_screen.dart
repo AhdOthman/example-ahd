@@ -5,6 +5,7 @@ import 'package:sizer/sizer.dart';
 import 'package:subrate/api_url.dart';
 import 'package:subrate/models/wallet/dynamic_form_model.dart';
 import 'package:subrate/models/wallet/dynamic_payment_request.dart';
+import 'package:subrate/provider/authprovider.dart';
 import 'package:subrate/provider/walletprovider.dart';
 import 'package:subrate/theme/app_colors.dart';
 import 'package:subrate/theme/failure.dart';
@@ -83,7 +84,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
   Widget build(BuildContext context) {
     final sizeh = MediaQuery.of(context).size.height;
     final sizew = MediaQuery.of(context).size.width;
-
+    final authProvider = Provider.of<AuthProvider>(context);
     final walletProvider = Provider.of<WalletProvider>(context);
     return Scaffold(
       backgroundColor: innerBackgroundColor,
@@ -146,8 +147,12 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                     }
                     if (snapshot.hasData) {
                       if (snapshot.data is Failure) {
-                        return Center(
-                            child: TextWidget(snapshot.data.toString()));
+                        return authProvider.tenantID == null
+                            ? Center(
+                                child: Text('Please Select Tenant'),
+                              )
+                            : Center(
+                                child: TextWidget(snapshot.data.toString()));
                       }
                       final provider = Provider.of<WalletProvider>(context);
 
@@ -210,8 +215,12 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                     }
                     if (snapshot.hasData) {
                       if (snapshot.data is Failure) {
-                        return Center(
-                            child: TextWidget(snapshot.data.toString()));
+                        return authProvider.tenantID == null
+                            ? Center(
+                                child: Text(''),
+                              )
+                            : Center(
+                                child: TextWidget(snapshot.data.toString()));
                       }
                       final provider = Provider.of<WalletProvider>(context);
 

@@ -112,7 +112,22 @@ class CodegenLoader extends AssetLoader{
   "completed": "Completed",
   "rejected": "Invitation Rejected Successfully",
   "are_you_sure": "Are you sure?",
-  "delete_message": "Are you sure that you want to delete your account?"
+  "delete_message": "Are you sure that you want to delete your account?",
+  "lets_start": "Let's Start",
+  "forget_password": "Forget Password",
+  "send_otp": "Send OTP",
+  "verify_identity": "Verify Your Identity",
+  "we_sent": "We've sent a 6-digit OTP to your email",
+  "enter_it_below": "Enter it below to continue.",
+  "set_new_password": "Reset your password!",
+  "password_reset_sucss": "Your password has been",
+  "login_now": "Login Now",
+  "reset_su": "reset successfully!",
+  "hours": "Hours",
+  "minutes": "Minutes",
+  "didnt_recieve": "Didn't receive the OTP? ",
+  "resend_otp": "Resend OTP",
+  "code_inncorrect": "The code is incorrect. Please try again."
 };
 static const Map<String,dynamic> ar = {
   "hello": "مرحباً",
@@ -212,7 +227,22 @@ static const Map<String,dynamic> ar = {
   "completed": "مكتملة",
   "rejected": "تم رفض الدعوة",
   "are_you_sure": "هل أنت متأكد؟",
-  "delete_message": "هل أنت متأكد أنك تريد حذف حسابك؟"
+  "delete_message": "هل أنت متأكد أنك تريد حذف حسابك؟",
+  "lets_start": "لنبدأ",
+  "forget_password": "نسيت كلمة المرور",
+  "send_otp": "إرسال الرمز",
+  "verify_identity": "التحقق من هويتك",
+  "we_sent": "لقد أرسلنا كود من 6 خانات لبريدك",
+  "enter_it_below": "أدخله في الأسفل",
+  "set_new_password": "استعد كلمة المرور!",
+  "password_reset_sucss": "تم إعادة تعيين كلمة السر",
+  "login_now": "سجل دخول الآن",
+  "reset_su": "بنجاح!",
+  "hours": "ساعات",
+  "minutes": "دقائق",
+  "didnt_recieve": "لم يصلك الرمز؟",
+  "resend_otp": "أعد الإرسال",
+  "code_inncorrect": "هذا الكود خاطئ، حاول مرة أخرى."
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en": en, "ar": ar};
 }

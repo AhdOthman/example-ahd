@@ -11,6 +11,7 @@ import 'package:subrate/routers/routers.dart';
 import 'package:subrate/theme/app_colors.dart';
 import 'package:subrate/theme/assets_managet.dart';
 import 'package:subrate/theme/text_style.dart';
+import 'package:subrate/theme/ui_helper.dart';
 import 'package:subrate/translations/locale_keys.g.dart';
 import 'package:subrate/widgets/app/button.dart';
 import 'package:subrate/widgets/app/loadingdialog.dart';
@@ -87,6 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   CustomField(
+                    errorText: 'Please enter your email',
                     hintText: LocaleKeys.email.tr(),
                     title: LocaleKeys.email.tr(),
                     hintSize: 1,
@@ -94,6 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: sizeh * .02),
                   CustomField(
+                    errorText: 'Please enter your password',
                     isPassword: true,
                     passwordCover: true,
                     hintText: LocaleKeys.password.tr(),
@@ -101,10 +104,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     widget: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          LocaleKeys.forget.tr(),
-                          style: AppTextStyles.semiBold
-                              .copyWith(fontSize: 12.sp, color: primaryColor),
+                        InkWell(
+                          onTap: () {
+                            routers.navigateToForgetPasswordScreen(context);
+                          },
+                          child: Text(
+                            LocaleKeys.forget.tr(),
+                            style: AppTextStyles.semiBold
+                                .copyWith(fontSize: 12.sp, color: primaryColor),
+                          ),
                         ),
                       ],
                     ),
@@ -126,7 +134,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             .then((value) {
                           Navigator.pop(context);
                           if (value) {
-                            routers.navigateToBottomBarScreen(context);
+                            authProvider.loginRespons?.user?.role != 'USER'
+                                ? UIHelper.showNotification(
+                                    'This app just for trainee, you can not login as a user',
+                                  )
+                                : routers.navigateToBottomBarScreen(context);
+                          } else {
+                            Navigator.pop(context);
                           }
                         });
                       }
@@ -159,12 +173,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                               child: SocialButton(
                                   assetName: appleIcon, title: 'Apple'))
-                          : InkWell(
-                              onTap: () {
-                                authProvider.handleSignInWithGoogle(context);
-                              },
-                              child: SocialButton(
-                                  assetName: googleIcon, title: 'Google')),
+                          : SizedBox(),
+                      SizedBox(width: sizew * .02),
+                      InkWell(
+                          onTap: () {
+                            authProvider.handleSignInWithGoogle(context);
+                          },
+                          child: SocialButton(
+                              assetName: googleIcon, title: 'Google')),
                       //     SizedBox(width: sizew * .02),
                       //     SocialButton(assetName: facebookIcon, title: 'Facebook'),
                       SizedBox(width: sizew * .02),

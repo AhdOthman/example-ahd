@@ -2,6 +2,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:subrate/models/profile/edit_profile_model.dart';
@@ -54,21 +55,25 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
 
   @override
   void initState() {
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
+
     final profileProvider =
         Provider.of<Profileprovider>(context, listen: false);
     firstNameController.text = profileProvider.profileModel?.firstName ?? '';
-    lastNameController.text = profileProvider.profileModel?.lastName ?? '';
+    lastNameController.text = appProvider.isFromHome
+        ? profileProvider.profileModel?.firstName ?? ''
+        : profileProvider.profileModel?.lastName ?? '';
     emailController.text = profileProvider.profileModel?.email ?? '';
     phoneController.text = profileProvider.profileModel?.phone ?? '';
     profileProvider.profileModel?.birthDate != null
         ? dobController.text = formatter.format(DateTime.parse(
             profileProvider.profileModel?.birthDate ?? '1/1/1000'))
         : null;
-    profileProvider.profileModel?.country?.id != null
-        ? _myCountry = profileProvider.profileModel?.country?.id.toString()
+    profileProvider.profileModel?.countryId != null
+        ? _myCountry = profileProvider.profileModel?.countryId.toString()
         : '';
-    profileProvider.profileModel?.country?.nameAr != null
-        ? _country = profileProvider.profileModel?.country?.nameAr.toString()
+    profileProvider.profileModel?.countryName != null
+        ? _country = profileProvider.profileModel?.countryName.toString()
         : '';
 
     // TODO: implement initState
@@ -144,6 +149,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                           SizedBox(
                             width: sizew * .41,
                             child: CustomField(
+                                errorText: 'Please enter your first name',
                                 labelColor: primaryColor,
                                 disabledBorder: primaryColor,
                                 hintText: LocaleKeys.first_name.tr(),
@@ -157,6 +163,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                           SizedBox(
                             width: sizew * .41,
                             child: CustomField(
+                                errorText: 'Please enter your last name',
                                 labelColor: primaryColor,
                                 disabledBorder: primaryColor,
                                 hintText: LocaleKeys.last_name.tr(),
@@ -174,18 +181,104 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                           title: LocaleKeys.email.tr(),
                           hintSize: 1,
                           controller: emailController),
+                      // DropdownSearch<String>(
+                      //   validator: (value) {
+                      //     if (value?.isEmpty ?? true) {
+                      //       return 'Please enter your country';
+                      //     }
+
+                      //     return null;
+                      //   },
+                      //   selectedItem: _country,
+                      //   popupProps: const PopupProps.menu(
+                      //     showSearchBox: true,
+                      //     showSelectedItems: true,
+                      //   ),
+                      //   items: appProvider.countryList.map((item) {
+                      //     return item.nameAr ?? '';
+                      //   }).toList(),
+                      //   dropdownDecoratorProps: DropDownDecoratorProps(
+                      //     baseStyle: AppTextStyles.regular
+                      //         .copyWith(fontSize: 12.sp, color: primaryColor),
+                      //     dropdownSearchDecoration: InputDecoration(
+                      //       alignLabelWithHint: true,
+                      //       enabledBorder: UnderlineInputBorder(
+                      //           borderSide:
+                      //               BorderSide(color: primaryColor, width: 1)),
+                      //       disabledBorder: UnderlineInputBorder(
+                      //         borderSide:
+                      //             BorderSide(color: primaryColor, width: 1),
+                      //       ),
+                      //       focusedBorder: UnderlineInputBorder(
+                      //         borderSide:
+                      //             BorderSide(color: primaryColor, width: 1),
+                      //       ),
+                      //       //create border with borderRadius
+                      //       border: UnderlineInputBorder(
+                      //         borderSide:
+                      //             BorderSide(color: primaryColor, width: 1),
+                      //       ),
+
+                      //       hintStyle: TextStyle(
+                      //           fontSize: 12.sp,
+                      //           fontWeight: FontWeight.w500,
+                      //           color: primaryColor),
+                      //       hintText: LocaleKeys.country.tr(),
+                      //       label: Text(
+                      //         LocaleKeys.country.tr(),
+                      //       ),
+                      //       labelStyle: AppTextStyles.regular
+                      //           .copyWith(fontSize: 12.sp, color: primaryColor),
+                      //     ),
+                      //   ),
+                      //   onChanged: (newValue) {
+                      //     setState(() {
+                      //       appProvider.countryList.forEach((element) {
+                      //         element.nameAr == newValue
+                      //             ? _myCountry = element.id.toString()
+                      //             : '';
+                      //         print(_myCountry);
+                      //       });
+
+                      //       // print(_myType);
+                      //       _country = newValue;
+                      //     });
+                      //   },
+                      // ),
                       DropdownSearch<String>(
                         validator: (value) {
-                          if (value?.isEmpty ?? true) {
-                            return 'Please enter some text';
-                          }
-
                           return null;
                         },
                         selectedItem: _country,
-                        popupProps: const PopupProps.menu(
+                        popupProps: PopupProps.menu(
                           showSearchBox: true,
                           showSelectedItems: true,
+                          itemBuilder: (context, item, isSelected) {
+                            final country = appProvider.countryList.firstWhere(
+                              (element) => element.nameAr == item,
+                            );
+
+                            return ListTile(
+                              leading: country.flag != null
+                                  ? country.flag!.contains('svg')
+                                      ? SvgPicture.network(
+                                          country.flag!,
+                                          height: sizeh * .03,
+                                        )
+                                      : Image.network(
+                                          country.flag!,
+                                          fit: BoxFit.cover,
+                                        )
+                                  : const Icon(Icons.flag),
+                              title: Text(
+                                country.nameAr ?? '',
+                                style: TextStyle(
+                                  color:
+                                      isSelected ? Colors.blue : Colors.black,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                         items: appProvider.countryList.map((item) {
                           return item.nameAr ?? '';
@@ -196,32 +289,32 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                           dropdownSearchDecoration: InputDecoration(
                             alignLabelWithHint: true,
                             enabledBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: primaryColor, width: 1)),
+                                borderSide: BorderSide(
+                                    color: Color(0xFFCBD5E1), width: 1)),
                             disabledBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: primaryColor, width: 1),
+                              borderSide: BorderSide(
+                                  color: Color(0xFFCBD5E1), width: 1),
                             ),
                             focusedBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: primaryColor, width: 1),
+                              borderSide: BorderSide(
+                                  color: Color(0xFFCBD5E1), width: 1),
                             ),
                             //create border with borderRadius
                             border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: primaryColor, width: 1),
+                              borderSide: BorderSide(
+                                  color: Color(0xFFCBD5E1), width: 1),
                             ),
 
                             hintStyle: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w500,
-                                color: primaryColor),
+                                color: HexColor('#242424')),
                             hintText: LocaleKeys.country.tr(),
                             label: Text(
                               LocaleKeys.country.tr(),
                             ),
-                            labelStyle: AppTextStyles.regular
-                                .copyWith(fontSize: 12.sp, color: primaryColor),
+                            labelStyle: AppTextStyles.regular.copyWith(
+                                fontSize: 12.sp, color: Color(0xFF757575)),
                           ),
                         ),
                         onChanged: (newValue) {
@@ -240,6 +333,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                       ),
                       space,
                       CustomField(
+                          validator: (value) {
+                            return null;
+                          },
+                          keyboardType: TextInputType.number,
                           isPhone: true,
                           didgits: 16,
                           labelColor: primaryColor,
@@ -254,6 +351,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                           _selectDate(context);
                         },
                         child: CustomField(
+                            validator: (p0) {
+                              return null;
+                            },
                             labelColor: primaryColor,
                             disabledBorder: primaryColor,
                             enabled: false,
@@ -301,6 +401,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                           countryId: _myCountry,
                         ))
                             .then((value) {
+                          print('value $value');
                           if (value == true) {
                             appProvider.isFromHome
                                 ? routers.navigateToBottomBarScreen(context)

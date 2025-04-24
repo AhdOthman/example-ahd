@@ -134,154 +134,161 @@ class _TasksDetailsScreenState extends State<TasksByProgramsDetailsScreen> {
       body: Container(
         padding: EdgeInsets.symmetric(
             horizontal: sizew * .035, vertical: sizeh * .015),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: sizeh * .07,
-            ),
-            Row(
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: primaryColor,
-                      borderRadius: BorderRadius.circular(5),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: sizeh * .07,
+              ),
+              Row(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: sizew * .01, vertical: sizeh * .005),
+                      child: Icon(Icons.arrow_back, color: yallewTextColor),
                     ),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: sizew * .01, vertical: sizeh * .005),
-                    child: Icon(Icons.arrow_back, color: yallewTextColor),
                   ),
-                ),
-                SizedBox(
-                  width: sizew * .02,
-                ),
-                Text(
-                  LocaleKeys.programs.tr(),
-                  style: AppTextStyles.semiBold
-                      .copyWith(fontSize: 17.sp, color: primaryColor),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: sizeh * .035,
-            ),
-            _isLoading
-                ? Center(
-                    child: SkeletonContainer(
-                      radius: 5,
-                      width: sizew,
-                      height: sizeh * .2,
-                    ),
-                  )
-                : _hasError
-                    ? const Center(
-                        child: Text(
-                          "Error loading video. Please check the URL.",
-                          style: TextStyle(color: Colors.red, fontSize: 18),
-                        ),
-                      )
-                    : _isYouTubeLink
-                        ? YoutubePlayer(
-                            controller: _youtubePlayerController!,
-                            showVideoProgressIndicator: true,
-                            onReady: () {
-                              print("YouTube Player is ready.");
-                            },
-                            onEnded: (metaData) {
-                              print("YouTube video has ended.");
-                            },
-                          )
-                        : BetterPlayer(
-                            controller: _betterPlayerController!,
+                  SizedBox(
+                    width: sizew * .02,
+                  ),
+                  Text(
+                    LocaleKeys.programs.tr(),
+                    style: AppTextStyles.semiBold
+                        .copyWith(fontSize: 17.sp, color: primaryColor),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: sizeh * .035,
+              ),
+              _isLoading
+                  ? Center(
+                      child: SkeletonContainer(
+                        radius: 5,
+                        width: sizew,
+                        height: sizeh * .2,
+                      ),
+                    )
+                  : _hasError
+                      ? const Center(
+                          child: Text(
+                            "Error loading video. Please check the URL.",
+                            style: TextStyle(color: Colors.red, fontSize: 18),
                           ),
-            // Container(
-            //   width: sizew,
-            //   height: sizeh * .2,
-            //   decoration: BoxDecoration(
-            //       color: Color(0xFF587EDC),
-            //       borderRadius: BorderRadius.circular(5)),
-            // ),
+                        )
+                      : _isYouTubeLink
+                          ? YoutubePlayer(
+                              controller: _youtubePlayerController!,
+                              showVideoProgressIndicator: true,
+                              onReady: () {
+                                print("YouTube Player is ready.");
+                              },
+                              onEnded: (metaData) {
+                                print("YouTube video has ended.");
+                              },
+                            )
+                          : BetterPlayer(
+                              controller: _betterPlayerController!,
+                            ),
+              // Container(
+              //   width: sizew,
+              //   height: sizeh * .2,
+              //   decoration: BoxDecoration(
+              //       color: Color(0xFF587EDC),
+              //       borderRadius: BorderRadius.circular(5)),
+              // ),
 
-            SizedBox(
-              height: sizeh * .025,
-            ),
-            Text(
-              LocaleKeys.tasks.tr(),
-              style: AppTextStyles.semiBold
-                  .copyWith(fontSize: 14.sp, color: primaryColor),
-            ),
-            SizedBox(
-              height: sizeh * .025,
-            ),
-            FutureBuilder(
-              future: _fetcheTasksByPrograms,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Container(
-                      margin: EdgeInsets.symmetric(vertical: sizeh * .005),
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: 3,
-                          itemBuilder: (context, index) {
-                            return _buildTaskByProgramsSkeleton();
-                          }));
-                }
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
-                }
-                if (snapshot.hasData) {
-                  if (snapshot.data is Failure) {
-                    return Center(child: TextWidget(snapshot.data.toString()));
+              SizedBox(
+                height: sizeh * .025,
+              ),
+              Text(
+                LocaleKeys.tasks.tr(),
+                style: AppTextStyles.semiBold
+                    .copyWith(fontSize: 14.sp, color: primaryColor),
+              ),
+              SizedBox(
+                height: sizeh * .025,
+              ),
+              FutureBuilder(
+                future: _fetcheTasksByPrograms,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Container(
+                        margin: EdgeInsets.symmetric(vertical: sizeh * .005),
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.zero,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: 3,
+                            itemBuilder: (context, index) {
+                              return _buildTaskByProgramsSkeleton();
+                            }));
                   }
-                  final provider = Provider.of<ProgramProvider>(context);
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  }
+                  if (snapshot.hasData) {
+                    if (snapshot.data is Failure) {
+                      return Center(
+                          child: TextWidget(snapshot.data.toString()));
+                    }
+                    final provider = Provider.of<ProgramProvider>(context);
 
-                  var getProgramsList = provider.tasksByProgramList;
-                  return getProgramsList.isNotEmpty
-                      ? Container(
-                          margin: EdgeInsets.symmetric(vertical: sizeh * .005),
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              padding: EdgeInsets.zero,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: getProgramsList.length,
-                              itemBuilder: (context, index) {
-                                return buildTaskCard(sizeh, sizew,
-                                    index: index,
-                                    taskTitle:
-                                        getProgramsList[index].title ?? '',
-                                    taskDescription:
-                                        getProgramsList[index].description ??
-                                            '',
-                                    points:
-                                        getProgramsList[index].point.toString(),
-                                    date: appProvider.dateFormat.format(
-                                        DateTime.parse(
-                                            getProgramsList[index].createdAt ??
-                                                '')),
-                                    taskID: getProgramsList[index]
-                                            .submissions?[0]
-                                            .id ??
-                                        '');
-                              }))
-                      : SizedBox(
-                          height: 60.h,
-                          child: Center(
-                            child: Text('Empty'),
-                          ),
-                        );
-                }
-                return Container();
-              },
-            ),
-          ],
+                    var getProgramsList = provider.tasksByProgramList;
+                    return getProgramsList.isNotEmpty
+                        ? Container(
+                            margin:
+                                EdgeInsets.symmetric(vertical: sizeh * .005),
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: getProgramsList.length,
+                                itemBuilder: (context, index) {
+                                  return buildTaskCard(sizeh, sizew,
+                                      index: index,
+                                      dateTime:
+                                          getProgramsList[index].deadline ?? '',
+                                      taskTitle:
+                                          getProgramsList[index].title ?? '',
+                                      taskDescription:
+                                          getProgramsList[index].description ??
+                                              '',
+                                      points: getProgramsList[index]
+                                          .point
+                                          .toString(),
+                                      date: appProvider.dateFormat.format(
+                                          DateTime.parse(
+                                              getProgramsList[index].deadline ??
+                                                  '')),
+                                      taskID: getProgramsList[index]
+                                              .submissions?[0]
+                                              .id ??
+                                          '');
+                                }))
+                        : SizedBox(
+                            height: 60.h,
+                            child: Center(
+                              child: Text('Empty'),
+                            ),
+                          );
+                  }
+                  return Container();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -293,6 +300,7 @@ class _TasksDetailsScreenState extends State<TasksByProgramsDetailsScreen> {
       required String taskDescription,
       required String points,
       required String date,
+      required String dateTime,
       required String taskID}) {
     final Routers routers = Routers();
     return Container(
@@ -357,23 +365,25 @@ class _TasksDetailsScreenState extends State<TasksByProgramsDetailsScreen> {
           SizedBox(
             height: sizeh * .04,
           ),
-          ButtonWidget(
-            text: LocaleKeys.start.tr(),
-            onPress: () {
-              routers.navigateToTasksDescriptionScreen(context,
-                  args: {'title': taskTitle, 'id': taskID});
-            },
-            buttonColor: Colors.transparent,
-            borderColor: primaryColor,
-            textColor: primaryColor,
-            radius: 5,
-            width: sizew * .5,
-            height: sizeh * .055,
-            textStyle: AppTextStyles.regular.copyWith(
-              fontSize: 13.sp,
-              color: primaryColor,
-            ),
-          )
+          DateTime.parse(dateTime).isBefore(DateTime.now())
+              ? SizedBox()
+              : ButtonWidget(
+                  text: LocaleKeys.start.tr(),
+                  onPress: () {
+                    routers.navigateToTasksDescriptionScreen(context,
+                        args: {'title': taskTitle, 'id': taskID});
+                  },
+                  buttonColor: Colors.transparent,
+                  borderColor: primaryColor,
+                  textColor: primaryColor,
+                  radius: 5,
+                  width: sizew * .5,
+                  height: sizeh * .055,
+                  textStyle: AppTextStyles.regular.copyWith(
+                    fontSize: 13.sp,
+                    color: primaryColor,
+                  ),
+                )
         ],
       ),
     );

@@ -12,7 +12,6 @@ import '../theme/ui_helper.dart';
 
 class BaseDioApi {
   String? token;
-
   final Dio _dio = Dio();
 
   late Response _response;
@@ -42,7 +41,7 @@ class BaseDioApi {
   CallToken callToken = CallToken();
 
   Future<Map<String, dynamic>> sendRequest(Enum type,
-      {required bool isAuthenticated}) async {
+      {required bool isAuthenticated, bool sendTenantId = true}) async {
     callToken.getTenant().then((value) {
       tenantId = callToken.tenantID;
       print('tenantIDDDDD ${callToken.tenantID}');
@@ -56,7 +55,7 @@ class BaseDioApi {
     if (isAuthenticated) {
       addToHeaders('Content-Type', 'application/json');
       addToHeaders('Authorization', 'Bearer ${callToken.token}');
-      addToHeaders('x-tenant-id', tenantId.toString());
+      sendTenantId ? addToHeaders('x-tenant-id', tenantId.toString()) : null;
     }
 
     print('object from request $type');

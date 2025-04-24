@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +60,7 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
-  String countryPrefix = '+971';
+  String? countryPrefix;
   bool acseptTerms = false;
   @override
   Widget build(BuildContext context) {
@@ -128,6 +130,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         SizedBox(
                           width: sizew * .38,
                           child: CustomField(
+                              errorText: 'Please enter your first name',
                               hintText: LocaleKeys.first_name.tr(),
                               title: LocaleKeys.first_name.tr(),
                               hintSize: 1,
@@ -139,6 +142,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         SizedBox(
                           width: sizew * .38,
                           child: CustomField(
+                              errorText: 'Please enter your last name',
                               hintText: LocaleKeys.last_name.tr(),
                               title: LocaleKeys.last_name.tr(),
                               hintSize: 1,
@@ -148,16 +152,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     space,
                     CustomField(
+                        errorText: 'Please enter your email',
                         hintText: LocaleKeys.email.tr(),
                         title: LocaleKeys.email.tr(),
                         hintSize: 1,
                         controller: emailController),
                     DropdownSearch<String>(
                       validator: (value) {
-                        if (value?.isEmpty ?? true) {
-                          return 'Please enter some text';
-                        }
-
                         return null;
                       },
                       selectedItem: _country,
@@ -171,10 +172,15 @@ class _SignupScreenState extends State<SignupScreen> {
 
                           return ListTile(
                             leading: country.flag != null
-                                ? Image.network(
-                                    country.flag!,
-                                    fit: BoxFit.cover,
-                                  )
+                                ? country.flag!.contains('svg')
+                                    ? SvgPicture.network(
+                                        country.flag!,
+                                        height: sizeh * .03,
+                                      )
+                                    : Image.network(
+                                        country.flag!,
+                                        fit: BoxFit.cover,
+                                      )
                                 : const Icon(Icons.flag),
                             title: Text(
                               country.nameAr ?? '',
@@ -240,6 +246,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     space,
                     space,
                     CustomField(
+                        validator: (value) {
+                          return null;
+                        },
                         prefixIcon: CountryCodePicker(
                           flagWidth: sizew * .06,
                           padding: EdgeInsets.symmetric(vertical: sizew * .015),
@@ -259,6 +268,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           showFlagDialog: true,
                         ),
                         isPhone: true,
+                        keyboardType: TextInputType.number,
                         didgits: 10,
                         hintText: LocaleKeys.phone_number.tr(),
                         title: LocaleKeys.phone_number.tr(),
@@ -316,14 +326,18 @@ class _SignupScreenState extends State<SignupScreen> {
                                             lastName: lastNameController.text,
                                             email: emailController.text,
                                             password: passwordController.text,
-                                            phone:
-                                                '${countryPrefix}${phoneController.text}',
+                                            phone: phoneController.text,
                                             countryId: _myCountry,
                                             birthDate: dobController.text))
                                     .then((value) {
                                   Navigator.pop(context);
                                   if (value) {
-                                    routers.navigateToBottomBarScreen(context);
+                                    UIHelper.showNotification(
+                                        'Account created successfully, check your email to verify your account',
+                                        backgroundColor: Colors.green);
+                                    routers.navigateToVerifyAccountScreen(
+                                        context,
+                                        args: {'email': emailController.text});
                                   } else {}
                                 });
                               }
@@ -365,6 +379,23 @@ class _SignupScreenState extends State<SignupScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Platform.isIOS
+                            ? InkWell(
+                                onTap: () {
+                                  authProvider
+                                      .handleSignInWithApple(context)
+                                      .then((value) {
+                                    // if (value == true) {
+                                    //   routers.navigateToBottomBarScreen(context);
+                                    // } else {
+                                    //   Navigator.of(context).pop();
+                                    // }
+                                  });
+                                },
+                                child: SocialButton(
+                                    assetName: appleIcon, title: 'Apple'))
+                            : SizedBox(),
+                        SizedBox(width: sizew * .02),
                         InkWell(
                             onTap: () {
                               authProvider.handleSignInWithGoogle(context);
@@ -374,12 +405,6 @@ class _SignupScreenState extends State<SignupScreen> {
                         //     SizedBox(width: sizew * .02),
                         //     SocialButton(assetName: facebookIcon, title: 'Facebook'),
                         SizedBox(width: sizew * .02),
-                        InkWell(
-                            onTap: () {
-                              authProvider.handleSignInWithApple(context);
-                            },
-                            child: SocialButton(
-                                assetName: appleIcon, title: 'Apple')),
                       ],
                     ),
                     SizedBox(

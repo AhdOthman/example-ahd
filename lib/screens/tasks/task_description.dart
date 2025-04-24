@@ -276,53 +276,61 @@ class _TaskDescriptionScreenState extends State<TaskDescriptionScreen> {
                           ),
                     isSubmitted
                         ? SizedBox()
-                        : Center(
-                            child: ButtonWidget(
-                              text: imageResult == null
-                                  ? LocaleKeys.submit_task.tr()
-                                  : LocaleKeys.task_done.tr(),
-                              onPress: imageResult != null
-                                  ? () {
-                                      loadingDialog(context);
-                                      taskProvider
-                                          .submitTask(
-                                              submitTaskModel: SubmitTaskModel(
-                                                  taskSubmissionId:
-                                                      argumets['id'],
-                                                  attachment: imageResult))
-                                          .then((valye) {
-                                        Navigator.pop(context);
-                                        if (valye == true) {
-                                          homeProvider.getTasks();
-                                          setState(() {
-                                            isSubmitted = true;
+                        : DateTime.parse(taskProvider
+                                        .taskDetailsModel?.task?.deadlineDate ??
+                                    '')
+                                .isBefore(DateTime.now())
+                            ? SizedBox()
+                            : Center(
+                                child: ButtonWidget(
+                                  text: imageResult == null
+                                      ? LocaleKeys.submit_task.tr()
+                                      : LocaleKeys.task_done.tr(),
+                                  onPress: imageResult != null
+                                      ? () {
+                                          loadingDialog(context);
+                                          taskProvider
+                                              .submitTask(
+                                                  submitTaskModel:
+                                                      SubmitTaskModel(
+                                                          taskSubmissionId:
+                                                              argumets['id'],
+                                                          attachment:
+                                                              imageResult))
+                                              .then((valye) {
+                                            Navigator.pop(context);
+                                            if (valye == true) {
+                                              homeProvider.getTasks();
+                                              setState(() {
+                                                isSubmitted = true;
+                                              });
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    buildDialog(),
+                                              );
+                                            }
                                           });
+                                        }
+                                      : () {
                                           showDialog(
                                             context: context,
                                             builder: (context) => buildDialog(),
                                           );
-                                        }
-                                      });
-                                    }
-                                  : () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => buildDialog(),
-                                      );
-                                    },
-                              buttonColor: Colors.transparent,
-                              borderColor: primaryColor,
-                              textColor: primaryColor,
-                              radius: 5,
-                              borderWidth: 1,
-                              width: sizew * .5,
-                              height: sizeh * .05,
-                              textStyle: AppTextStyles.regular.copyWith(
-                                fontSize: 13.sp,
-                                color: primaryColor,
-                              ),
-                            ),
-                          )
+                                        },
+                                  buttonColor: Colors.transparent,
+                                  borderColor: primaryColor,
+                                  textColor: primaryColor,
+                                  radius: 5,
+                                  borderWidth: 1,
+                                  width: sizew * .5,
+                                  height: sizeh * .05,
+                                  textStyle: AppTextStyles.regular.copyWith(
+                                    fontSize: 13.sp,
+                                    color: primaryColor,
+                                  ),
+                                ),
+                              )
                   ],
                 ),
               ),

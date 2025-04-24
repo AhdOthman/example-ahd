@@ -1,19 +1,19 @@
 import 'package:subrate/api_url.dart';
-import 'package:subrate/models/auth/signin_model_request.dart';
+import 'package:subrate/models/auth/verify_account_model.dart';
 
 import '../../../helpers/base_dio_api.dart';
 import '../../../helpers/requests_enum.dart';
 
-class SigninApi extends BaseDioApi {
-  SigninModelRequest signinModelRequest;
+class VerifyAccountApi extends BaseDioApi {
+  VerifyAccountModel verifyAccountModel;
 
-  SigninApi({
-    required this.signinModelRequest,
-  }) : super(signinLink);
+  VerifyAccountApi({
+    required this.verifyAccountModel,
+  }) : super(verifyAccountLink);
 
   @override
   body() {
-    return signinModelRequest.toJson();
+    return verifyAccountModel.toJson();
   }
 
   Future fetch() async {

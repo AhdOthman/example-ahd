@@ -27,9 +27,16 @@ class EditProfileModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['firstName'] = this.firstName;
     data['lastName'] = this.lastName;
-    data['birthDate'] = this.birthDate;
-    data['phone'] = this.phone;
+    if (this.birthDate == '') {
+    } else {
+      data['birthDate'] = this.birthDate;
+    }
+    if (this.phone == '') {
+    } else {
+      data['phone'] = this.phone;
+    }
     data['email'] = this.email;
+
     data['countryId'] = this.countryId;
     return data;
   }

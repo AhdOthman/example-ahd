@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.1</string>
+	<string>1.0.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
@@ -56,6 +56,18 @@
 	<array>
 		<string>http</string>
 		<string>https</string>
+	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.519738265080-lu7eatedt1i451dl7bholkhivo3ir2pr</string>
+				<string>com.googleusercontent.apps.296210165303-l0nr0is03rjf130in1k5hmahiievhprs</string>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

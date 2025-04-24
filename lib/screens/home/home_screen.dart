@@ -69,7 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final homeProvider = Provider.of<HomeProvider>(context, listen: false);
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
+    final profileProvider =
+        Provider.of<Profileprovider>(context, listen: false);
+    profileProvider.getProfileData(context);
     _fetcheAllData = Future.wait([
       _getNotifications(),
       _getTenants(),
@@ -291,8 +293,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         authProvider.chooseTenant(
                                             model.tenant?.id ?? '');
                                         print(authProvider.tenantID);
-
-                                        _fetcheAllData = _getTasks();
+                                        _fetcheAllData = Future.wait([
+                                          _getNotifications(),
+                                          _getTasks(),
+                                        ]);
                                       },
                                       value: model.tenant?.fullName,
                                       child: Row(
@@ -424,7 +428,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             date: appProvider.dateFormat.format(
                                                 DateTime.parse(
                                                     getTaskLists[index]
-                                                            .createdAt ??
+                                                            .task
+                                                            ?.deadlineDate ??
                                                         '')),
                                             groupName: getTaskLists[index]
                                                     .group

@@ -96,5 +96,20 @@
   "completed": "مكتملة",
   "rejected": "تم رفض الدعوة",
   "are_you_sure": "هل أنت متأكد؟",
-  "delete_message": "هل أنت متأكد أنك تريد حذف حسابك؟"
+  "delete_message": "هل أنت متأكد أنك تريد حذف حسابك؟",
+  "lets_start": "لنبدأ",
+  "forget_password": "نسيت كلمة المرور",
+  "send_otp": "إرسال الرمز",
+  "verify_identity": "التحقق من هويتك",
+  "we_sent": "لقد أرسلنا كود من 6 خانات لبريدك",
+  "enter_it_below": "أدخله في الأسفل",
+  "set_new_password": "استعد كلمة المرور!",
+  "password_reset_sucss": "تم إعادة تعيين كلمة السر",
+  "login_now": "سجل دخول الآن",
+  "reset_su": "بنجاح!",
+  "hours": "ساعات",
+  "minutes": "دقائق",
+  "didnt_recieve": "لم يصلك الرمز؟",
+  "resend_otp": "أعد الإرسال",
+  "code_inncorrect": "هذا الكود خاطئ، حاول مرة أخرى."
 }

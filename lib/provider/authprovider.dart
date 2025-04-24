@@ -7,17 +7,23 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:subrate/api_url.dart';
+import 'package:subrate/models/auth/reset_password_model.dart';
 import 'package:subrate/models/auth/signin_model_request.dart';
 import 'package:subrate/models/auth/signup_model_request.dart';
 import 'package:subrate/models/auth/social_login_response_model.dart';
 import 'package:subrate/models/auth/update_password_model.dart';
+import 'package:subrate/models/auth/verify_account_model.dart';
 import 'package:subrate/provider/appprovider.dart';
 import 'package:subrate/routers/routers.dart';
 import 'package:subrate/services/api/auth/delete_my_account_api.dart';
+import 'package:subrate/services/api/auth/request_code_for_pass_api.dart';
+import 'package:subrate/services/api/auth/resend_verify_otp_api.dart';
 import 'package:subrate/services/api/auth/signin_api.dart';
 import 'package:subrate/services/api/auth/signin_with_apple_api.dart';
 import 'package:subrate/services/api/auth/signup_api.dart';
+import 'package:subrate/services/api/auth/submit_code_for_reset_api.dart';
 import 'package:subrate/services/api/auth/update_password_api.dart';
+import 'package:subrate/services/api/auth/verify_account_api.dart';
 import 'package:subrate/theme/failure.dart';
 import 'package:subrate/theme/ui_helper.dart';
 import 'package:subrate/widgets/app/loadingdialog.dart';
@@ -58,6 +64,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  LoginResponseModel? loginRespons;
   Future login({
     required SigninModelRequest loginRequestModel,
   }) async {
@@ -68,11 +75,10 @@ class AuthProvider with ChangeNotifier {
           await SigninApi(signinModelRequest: loginRequestModel).fetch();
       if (response['statusCode'] == 200) {
         print('objssssect');
-        LoginResponseModel authResponse =
-            LoginResponseModel.fromJson(response['result']);
+        loginRespons = LoginResponseModel.fromJson(response['result']);
 
-        token = authResponse.token;
-        userName = authResponse.user?.username ?? '';
+        token = loginRespons?.token;
+        userName = loginRespons?.user?.username ?? '';
         print(token);
         final userData = json.encode({
           'token': token,
@@ -187,6 +193,52 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future requestCodeForResetPass(String email) async {
+    try {
+      var response = await RequestCodeForPassApi(email: email).fetch();
+      print(response);
+      return true;
+    } on Failure {
+      return false;
+    }
+  }
+
+  Future reasetPassword(ResetPasswordModel resetPasswordModel) async {
+    try {
+      var response =
+          await SubmitCodeForResetApi(resetPasswordModel: resetPasswordModel)
+              .fetch();
+      print(response);
+      return true;
+    } on Failure {
+      return false;
+    }
+  }
+
+  Future resendVerifyOtp(String email) async {
+    print('request Sent resendVerifyOtp');
+
+    try {
+      var response = await ResendVerifyOtpApi(email: email).fetch();
+      print(response);
+      return true;
+    } on Failure {
+      return false;
+    }
+  }
+
+  Future verifyAccount(VerifyAccountModel verifyAccountModel) async {
+    try {
+      var response =
+          await VerifyAccountApi(verifyAccountModel: verifyAccountModel)
+              .fetch();
+      print(response);
+      return true;
+    } on Failure {
+      return false;
+    }
+  }
+
   SocialLoginResponseModel? socialLoginResponse;
 
   Future<bool> handleSignInWithApple(BuildContext context) async {
@@ -235,12 +287,14 @@ class AuthProvider with ChangeNotifier {
       return true;
     } catch (error) {
       print("Error: $error");
+      Navigator.of(context).pop();
 
       return false;
     }
   }
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(
+
       //  Specify the options to prompt for account selection
       scopes: ['email', 'profile', 'openid'],
       serverClientId:
@@ -251,8 +305,9 @@ class AuthProvider with ChangeNotifier {
 
     final Routers routers = Routers();
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       loadingDialog(context);
+
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser != null) {
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;

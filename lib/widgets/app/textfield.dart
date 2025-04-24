@@ -27,6 +27,7 @@ class CustomField extends StatelessWidget {
   final bool? enabled;
   final TextEditingController? controller;
   final void Function(String value)? onChange;
+  final String? errorText;
   const CustomField(
       {super.key,
       required this.hintText,
@@ -34,6 +35,7 @@ class CustomField extends StatelessWidget {
       this.disabledBorder,
       this.labelStyle,
       this.widget,
+      this.errorText,
       this.width,
       this.labelColor,
       this.style,
@@ -81,10 +83,13 @@ class CustomField extends StatelessWidget {
               validator: validator ??
                   (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter some text';
+                      return errorText ?? 'Please enter some text';
                     }
                     if (isPassword == true && value.length < 8) {
                       return 'Password must be 8 characters';
+                    }
+                    if (isPhone == true && value.length < 8) {
+                      return 'Phone must be 8 characters';
                     }
                     return null;
                   },
@@ -101,13 +106,16 @@ class CustomField extends StatelessWidget {
                   : [],
               decoration: InputDecoration(
                 contentPadding:
-                    EdgeInsets.symmetric(horizontal: 0, vertical: 6),
+                    EdgeInsets.symmetric(horizontal: 0, vertical: 2),
                 labelText: hintText,
-                suffixIcon: widget,
-                floatingLabelBehavior: FloatingLabelBehavior.auto,
-                prefixIcon: prefixIcon == null
+                suffixIcon: widget == null
                     ? null
-                    : SizedBox(height: sizeh * .02, child: prefixIcon),
+                    : SizedBox(
+                        height: sizeh * .03,
+                        child: widget,
+                      ),
+                floatingLabelBehavior: FloatingLabelBehavior.auto,
+                prefixIcon: prefixIcon == null ? null : prefixIcon,
                 prefix: suffixIcon,
                 labelStyle: labelStyle ??
                     AppTextStyles.regular.copyWith(

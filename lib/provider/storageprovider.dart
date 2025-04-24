@@ -61,8 +61,11 @@ class StorageProvider with ChangeNotifier {
         return false;
       }
     } catch (e) {
-      print("Error occurred: $e");
-      UIHelper.showNotification(e.toString());
+      if (e.toString().contains('413')) {
+        UIHelper.showNotification('File size is too large');
+      } else {
+        UIHelper.showNotification('Something went wrong');
+      }
       return false;
     }
   }

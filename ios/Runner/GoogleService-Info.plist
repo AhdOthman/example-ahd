@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>296210165303-l0nr0is03rjf130in1k5hmahiievhprs.apps.googleusercontent.com</string>
+	<string>519738265080-lu7eatedt1i451dl7bholkhivo3ir2pr.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.296210165303-l0nr0is03rjf130in1k5hmahiievhprs</string>
+	<string>com.googleusercontent.apps.519738265080-lu7eatedt1i451dl7bholkhivo3ir2pr</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>296210165303-614bjevpieeto3ojot3pas7t3r4i8436.apps.googleusercontent.com</string>
+	<string>519738265080-m9df59qe10hnckb3ov1gie49scc44lmq.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBo1aVDVbUOrDLmZUDAYIQqr500_E_ZGss</string>
+	<string>AIzaSyDuLL31ww9i8wBbGKHPfeAXjcm3i4myYXo</string>
 	<key>GCM_SENDER_ID</key>
-	<string>296210165303</string>
+	<string>519738265080</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.projecxio.subrate</string>
 	<key>PROJECT_ID</key>
-	<string>subrate-91f04</string>
+	<string>subrate-448411</string>
 	<key>STORAGE_BUCKET</key>
-	<string>subrate-91f04.firebasestorage.app</string>
+	<string>subrate-448411.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:296210165303:ios:ed6dfeac904c122958d9b2</string>
+	<string>1:519738265080:ios:03b2b113ab23c005df1a0d</string>
 </dict>
 </plist>
