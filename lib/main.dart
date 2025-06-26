@@ -15,13 +15,14 @@ import 'package:subrate/provider/storageprovider.dart';
 import 'package:subrate/provider/taskprovider.dart';
 import 'package:subrate/provider/walletprovider.dart';
 import 'package:subrate/routers/routers.dart';
-import 'package:subrate/screens/onboarding/onboarding_screen.dart';
 import 'package:subrate/screens/splash/splash_screen.dart';
+import 'package:subrate/theme/language_service.dart';
 import 'package:subrate/translations/codegen_loader.g.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+
   // await Firebase.initializeApp(
   //   options: DefaultFirebaseOptions.currentPlatform,
   // );
@@ -57,12 +58,15 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final bool? showHome;
+  final GlobalKey<NavigatorState>? navigatorKey;
 
-  const MyApp({super.key, this.showHome});
+  const MyApp({super.key, this.showHome, this.navigatorKey});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    LanguageService.initialize(context.locale);
+
     final Routers routers = Routers();
     return OverlaySupport.global(
       child: Sizer(builder: (context, orientation, deviceType) {
@@ -87,6 +91,7 @@ class MyApp extends StatelessWidget {
             ],
             child: Consumer<AuthProvider>(builder: (context, auth, _) {
               return MaterialApp(
+                navigatorKey: navigatorKey,
                 debugShowCheckedModeBanner: false,
                 locale: context.locale,
                 supportedLocales: context.supportedLocales,
@@ -131,9 +136,7 @@ class MyApp extends StatelessWidget {
                             return const Center(
                                 child: Text('An error occurred'));
                           } else {
-                            return showHome == true
-                                ? const SplashScreen()
-                                : const OnBoardingScreen();
+                            return SplashScreen();
                           }
                         },
                       ),

@@ -12,3 +12,6 @@ const Color programIconThirdColor = Color(0xFFEA4335);
 Color programThirdWithOpicity = programIconThirdColor.withOpacity(.3);
 const Color programIconForthColor = Color(0xFF1976D2);
 Color programForthWithOpicity = programIconForthColor.withOpacity(.3);
+const Color textPrimaryColor = Color(0xFF1C1E29);
+
+const Color yellowButtonsColor = Color(0xFFF0FF85);

@@ -280,15 +280,16 @@ class AuthProvider with ChangeNotifier {
       if (token != null) {
         routers.navigateToBottomBarScreen(context);
         prefs.setString('userData', userData);
-      } else {
-        Navigator.of(context).pop();
       }
 
       return true;
     } catch (error) {
       print("Error: $error");
-      Navigator.of(context).pop();
-
+      if (error.toString().contains('AuthorizationErrorCode.canceled')) {
+        // Navigator.of(context).pop();
+      } else {
+        Navigator.of(context).pop();
+      }
       return false;
     }
   }
@@ -340,49 +341,4 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
   }
-
-//   Future<bool> handleSignInWithGoogle(BuildContext context) async {
-//     final Routers routers = Routers();
-//     final prefs = await SharedPreferences.getInstance();
-
-//     try {
-//       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-
-//       if (googleUser != null) {
-//         loadingDialog(context);
-
-//         final GoogleSignInAuthentication googleAuth =
-//             await googleUser.authentication;
-//         print('googleAuth ${googleAuth.accessToken}');
-//         print(googleAuth.idToken);
-//         final AuthCredential credential = GoogleAuthProvider.credential(
-//           accessToken: googleAuth.accessToken,
-//           idToken: googleAuth.idToken,
-//         );
-//         final UserCredential userCrefdential =
-//             await _auth.signInWithCredential(credential);
-//         String? userIdToken = await userCrefdential.user?.getIdToken();
-//         var response =
-//             await SocialLoginApi(loginType: 'google', uID: userIdToken ?? '')
-//                 .fetch();
-//         socialLoginResponse = SocialLoginResponse.fromJson(response['data']);
-//         print(response);
-//         token = socialLoginResponse?.apiToken;
-//         userName = '${socialLoginResponse?.fullName}';
-//         print(token);
-//         final userData = json.encode({
-//           'token': token,
-//         });
-//         prefs.setString('userData', userData);
-//         token != null ? routers.navigateToBottomBarScreen(context) : null;
-//       }
-//       return true;
-//     } catch (error) {
-//       print("Error: $error");
-//       Navigator.of(context).pop();
-
-//       return false;
-//     }
-//   }
-// }
 }

@@ -18,11 +18,11 @@ const String updatePasswordLink = '$baseUrl/trainee/profile/editPassword';
 const String submitTaskLink = '$baseUrl/trainee/task/submit';
 const String getWalletBalanceLink = '$baseUrl/trainee/wallet/get';
 const String getPayoutMethodsLink =
-    '$baseUrl/trainee/wallet/payout/method/list';
+    '$baseUrl/trainee/wallet/payout/methods/list';
 const String getPayoutMethodDetailsLink =
     '$baseUrl/trainee/wallet/payout/method/details';
 const String addPaymentMethodLink =
-    '$baseUrl/trainee/wallet/payout/method/update';
+    '$baseUrl/trainee/wallet/payout/method/create';
 const String getTraineePaymentMethodLink =
     '$baseUrl/trainee/wallet/payout/methods/list';
 const String createPayoutRequestLink = '$baseUrl/trainee/wallet/payout/request';
@@ -37,3 +37,15 @@ const String resetPasswordLink = '$baseUrl/forgetPassword/resetPassword';
 const String verifyAccountLink = '$baseUrl/verification/verifyAccount';
 const String resendOtpLink =
     '$baseUrl/verification/sendRegisterVerificationCode';
+
+String getAllAccountsForPaymentMethodUrl(String id) {
+  return '$baseUrl/trainee/wallet/payout/method/accounts/$id';
+}
+
+String setAccountAsDefaultUrl(String id) {
+  return '$baseUrl/trainee/wallet/payout/account/default/$id';
+}
+
+String deletePayoutAccountUrl(String id) {
+  return '$baseUrl/trainee/wallet/payout/account/$id';
+}

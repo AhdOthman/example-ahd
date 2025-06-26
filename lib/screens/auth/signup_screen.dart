@@ -60,7 +60,7 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
-  String? countryPrefix;
+  String? countryPrefix = '+971';
   bool acseptTerms = false;
   @override
   Widget build(BuildContext context) {

@@ -8,6 +8,7 @@ import 'package:subrate/provider/authprovider.dart';
 import 'package:subrate/routers/routers.dart';
 import 'package:subrate/theme/app_colors.dart';
 import 'package:subrate/theme/assets_managet.dart';
+import 'package:subrate/theme/language_service.dart';
 import 'package:subrate/theme/text_style.dart';
 import 'package:subrate/translations/locale_keys.g.dart';
 import 'package:subrate/widgets/app/loadingdialog.dart';
@@ -235,6 +236,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         setState(() {
                           isArabic = true;
                           context.setLocale(Locale('ar'));
+                          LanguageService.setLocale(Locale('ar'));
                           Navigator.of(context).pop();
                         });
                         appProvider.selectedIndex = 3;
@@ -268,6 +270,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         setState(() {
                           isArabic = false;
                           context.setLocale(Locale('en'));
+                          LanguageService.setLocale(Locale('en'));
+
                           Navigator.of(context).pop();
                         });
                         appProvider.selectedIndex = 3;

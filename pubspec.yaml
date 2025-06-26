@@ -40,7 +40,7 @@ dependencies:
   dio: ^4.0.6
   overlay_support: ^2.1.0
   pin_code_fields: ^8.0.1
-  easy_localization: ^3.0.0
+  easy_localization: ^3.0.7+1
   lottie: ^3.1.2
   animations: ^2.0.2
   percent_indicator:
@@ -150,6 +150,23 @@ flutter:
         - asset: assets/fonts/CascadiaCode-SemiBold.ttf
         - asset: assets/fonts/CascadiaCode-SemiLight.ttf  
         - asset: assets/fonts/CascadiaCode.ttf  
+    - family: Zain
+      fonts:
+        - asset: assets/fonts/zain-black.ttf
+        - asset: assets/fonts/zain-bold.ttf
+        - asset: assets/fonts/zain-light.ttf
+        - asset: assets/fonts/zain-extralight.ttf
+        - asset: assets/fonts/zain-regular.ttf
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Bold.ttf
+        - asset: assets/fonts/Inter-ExtraLight.ttf
+        - asset: assets/fonts/Inter-Light.ttf
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-SemiBold.ttf
+        - asset: assets/fonts/Inter.ttf       
+        - asset: assets/fonts/Inter-Medium.ttf
+
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

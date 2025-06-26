@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:sizer/sizer.dart';
 import 'package:subrate/theme/app_colors.dart';
+import 'package:subrate/theme/text_style.dart';
 
 class ButtonWidget extends StatelessWidget {
   final String text;
@@ -70,10 +71,8 @@ class ButtonWidget extends StatelessWidget {
                   maxLines: 1,
                   textAlign: TextAlign.center,
                   style: textStyle ??
-                      TextStyle(
-                          fontSize: fontSize ?? 14.sp,
-                          fontWeight: fontWeight ?? FontWeight.w500,
-                          color: textColor ?? HexColor('FFFFFF'))),
+                      AppTextStyles.semiBold.copyWith(
+                          fontSize: 14.sp, color: HexColor('#1C1E29'))),
         ),
       ),
     );

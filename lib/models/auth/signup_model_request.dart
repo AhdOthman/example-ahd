@@ -46,8 +46,14 @@ class SignupModelRequest {
     } else {
       data['phone'] = this.phone;
     }
-    data['countryId'] = this.countryId;
-    data['countryCode'] = this.countryCode;
+    if (this.countryId == null) {
+    } else {
+      data['countryId'] = this.countryId;
+    }
+    if (this.phone == '') {
+    } else {
+      data['countryCode'] = this.countryCode;
+    }
     // data['nationalNumber'] = this.nationalNumber;
     return data;
   }

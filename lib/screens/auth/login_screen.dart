@@ -195,6 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: AppTextStyles.regular.copyWith(
                             fontSize: 11.5.sp, color: Color(0xFF828282)),
                       ),
+                      SizedBox(width: sizew * .01),
                       InkWell(
                         onTap: () {
                           routers.navigateToSignupScreen(context);

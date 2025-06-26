@@ -4,13 +4,17 @@ class KYCRequestModel {
   String? cardHolderId;
   String? cardType;
   String? cardImage;
+  String? countryId;
+  String? address;
 
   KYCRequestModel(
       {this.fullName,
       this.dateOfBirth,
       this.cardHolderId,
       this.cardType,
-      this.cardImage});
+      this.cardImage,
+      this.countryId,
+      this.address});
 
   KYCRequestModel.fromJson(Map<String, dynamic> json) {
     fullName = json['fullName'];
@@ -18,6 +22,8 @@ class KYCRequestModel {
     cardHolderId = json['cardHolderId'];
     cardType = json['cardType'];
     cardImage = json['cardImage'];
+    countryId = json['countryId'];
+    address = json['address'];
   }
 
   Map<String, dynamic> toJson() {
@@ -27,6 +33,8 @@ class KYCRequestModel {
     data['cardHolderId'] = this.cardHolderId;
     data['cardType'] = this.cardType;
     data['cardImage'] = this.cardImage;
+    data['countryId'] = this.countryId;
+    data['address'] = this.address;
     return data;
   }
 }

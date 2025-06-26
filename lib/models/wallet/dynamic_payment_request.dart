@@ -1,11 +1,13 @@
 class PaymentDetailsRequest {
   String? payoutMethodId;
+  String? accountName;
   List<Fields>? fields;
 
-  PaymentDetailsRequest({this.payoutMethodId, this.fields});
+  PaymentDetailsRequest({this.payoutMethodId, this.fields, this.accountName});
 
   PaymentDetailsRequest.fromJson(Map<String, dynamic> json) {
     payoutMethodId = json['payoutMethodId'];
+    accountName = json['accountName'];
     if (json['fields'] != null) {
       fields = <Fields>[];
       json['fields'].forEach((v) {
@@ -16,6 +18,7 @@ class PaymentDetailsRequest {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['accountName'] = this.accountName;
     data['payoutMethodId'] = this.payoutMethodId;
     if (this.fields != null) {
       data['fields'] = this.fields!.map((v) => v.toJson()).toList();

@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:subrate/models/wallet/dynamic_form_model.dart';
 import 'package:subrate/models/wallet/dynamic_payment_request.dart';
+import 'package:subrate/models/wallet/get_accounts_for_payment.dart';
 import 'package:subrate/models/wallet/payout_history_model.dart';
 import 'package:subrate/models/wallet/payout_mdethod_model.dart';
 import 'package:subrate/models/wallet/trainee_pmethods_model.dart';
 import 'package:subrate/services/api/wallet/add_payment_method_api.dart';
 import 'package:subrate/services/api/wallet/create_payout_api.dart';
+import 'package:subrate/services/api/wallet/delete_account_mdethod_api.dart';
+import 'package:subrate/services/api/wallet/get_accounts_for_method_api.dart';
 import 'package:subrate/services/api/wallet/get_payout_details_api.dart';
 import 'package:subrate/services/api/wallet/get_payout_history_api.dart';
 import 'package:subrate/services/api/wallet/get_payout_method_api.dart';
 import 'package:subrate/services/api/wallet/get_trainee_pmethods_api.dart';
 import 'package:subrate/services/api/wallet/get_wallet_api.dart';
+import 'package:subrate/services/api/wallet/set_defult_account_api.dart';
 import 'package:subrate/theme/failure.dart';
 
 class WalletProvider with ChangeNotifier {
@@ -144,6 +148,55 @@ class WalletProvider with ChangeNotifier {
     try {
       var response =
           await CreatePayoutApi(payoutMethodId: payoutMethodId).fetch();
+
+      print(response);
+      notifyListeners();
+      return true;
+    } on Failure {
+      return false;
+    }
+  }
+
+  List<GetAllAccountsForPaymentMethod> accountsPayoutList = [];
+  List<GetAllAccountsForPaymentMethod>? get getAccountsPayoutList =>
+      accountsPayoutList;
+  setAccountsPayoutLis(List<GetAllAccountsForPaymentMethod> value) {
+    accountsPayoutList = value;
+    notifyListeners();
+  }
+
+  Future getAccountsForMethod({required String id}) async {
+    accountsPayoutList.clear();
+    try {
+      final response =
+          await GetAccountsForMethodApi(payoutMethodId: id).fetch();
+      for (var type in response['result']) {
+        accountsPayoutList.add(GetAllAccountsForPaymentMethod.fromJson(type));
+      }
+      print('accountsPayoutList ${accountsPayoutList.length}');
+      setAccountsPayoutLis(accountsPayoutList);
+      notifyListeners();
+      return true;
+    } on Failure catch (f) {
+      return f;
+    }
+  }
+
+  Future setDefualtAccount({required String id}) async {
+    try {
+      var response = await SetDefultAccountApi(id: id).fetch();
+
+      print(response);
+      notifyListeners();
+      return true;
+    } on Failure {
+      return false;
+    }
+  }
+
+  Future deletePayoutAccount({required String id}) async {
+    try {
+      var response = await DeletePayoutAccountApi(id: id).fetch();
 
       print(response);
       notifyListeners();
