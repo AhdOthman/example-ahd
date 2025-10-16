@@ -1,4 +1,3 @@
-const String baseUrl = 'https://su-v2-backend.projecx.io/api';
 const String signupLink = '$baseUrl/auth/register';
 const String signinLink = '$baseUrl/auth/login';
 const String getCountryLink = '$baseUrl/presets/countries';
